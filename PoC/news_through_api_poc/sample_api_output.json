@@ -1,0 +1,56 @@
+{
+  "timestamp": "2025-08-19T06:19:02.679933",
+  "total_items": 2,
+  "sources_summary": {
+    "arxiv": {
+      "count": 1,
+      "sources": [
+        "Sample ArXiv Source"
+      ]
+    },
+    "newsapi": {
+      "count": 1,
+      "sources": [
+        "Sample News Source"
+      ]
+    }
+  },
+  "categories_summary": {
+    "Research Papers": 1,
+    "Business": 1
+  },
+  "items": [
+    {
+      "title": "Sample ArXiv Paper: Advances in AI",
+      "link": "https://arxiv.org/abs/sample123",
+      "source": "Sample ArXiv Source",
+      "source_type": "arxiv",
+      "category": "Research Papers",
+      "summary": "This is a sample research paper about advances in artificial intelligence.",
+      "published_date": "2024-01-15",
+      "content_hash": "sample_hash_1",
+      "api_data": {
+        "authors": [
+          "Sample Author 1",
+          "Sample Author 2"
+        ],
+        "pdf_url": "https://arxiv.org/pdf/sample123.pdf"
+      }
+    },
+    {
+      "title": "Sample News Article: AI in Business",
+      "link": "https://example.com/ai-business",
+      "source": "Sample News Source",
+      "source_type": "newsapi",
+      "category": "Business",
+      "summary": "A sample news article about AI applications in business.",
+      "published_date": "2024-01-15T10:00:00Z",
+      "content_hash": "sample_hash_2",
+      "api_data": {
+        "author": "Sample Journalist",
+        "source_name": "Sample News",
+        "url_to_image": "https://example.com/image.jpg"
+      }
+    }
+  ]
+}

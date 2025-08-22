@@ -1,0 +1,104 @@
+# API News Sources Configuration
+# This file configures the sources for the API News Collector
+
+sources:
+  # ArXiv sources for research papers
+  - name: "ArXiv AI Papers"
+    source_type: "arxiv"
+    enabled: true
+    max_items: 10
+    max_results: 20
+    update_interval: 3600 # 1 hour in seconds
+    query: "AI OR artificial intelligence OR machine learning"
+    sort_by: "submittedDate"
+    sort_order: "descending"
+    category: "Research Papers"
+    last_fetch: null
+
+  - name: "ArXiv Computer Vision"
+    source_type: "arxiv"
+    enabled: true
+    max_items: 10
+    max_results: 15
+    update_interval: 3600
+    query: "computer vision OR image recognition OR object detection"
+    sort_by: "submittedDate"
+    sort_order: "descending"
+    category: "Computer Vision"
+    last_fetch: null
+
+  - name: "ArXiv NLP Papers"
+    source_type: "arxiv"
+    enabled: true
+    max_items: 10
+    max_results: 15
+    update_interval: 3600
+    query: "natural language processing OR NLP OR transformers OR language models"
+    sort_by: "submittedDate"
+    sort_order: "descending"
+    category: "Natural Language Processing"
+    last_fetch: null
+
+  - name: "ArXiv Robotics"
+    source_type: "arxiv"
+    enabled: true
+    max_items: 10
+    max_results: 15
+    update_interval: 3600
+    query: "robotics OR autonomous systems OR robot learning"
+    sort_by: "submittedDate"
+    sort_order: "descending"
+    category: "Robotics"
+    last_fetch: null
+
+  # NewsAPI sources for general news
+  - name: "Tech News AI"
+    source_type: "newsapi"
+    enabled: true
+    max_items: 15
+    update_interval: 3600
+    query: "AI"
+    category: "technology"
+    language: "en"
+    country: "us"
+    last_fetch: null
+
+  - name: "Business AI News"
+    source_type: "newsapi"
+    enabled: true
+    max_items: 10
+    update_interval: 3600
+    query: "AI"
+    category: "business"
+    language: "en"
+    country: "us"
+    last_fetch: null
+
+  - name: "Science AI News"
+    source_type: "newsapi"
+    enabled: true
+    max_items: 10
+    update_interval: 3600
+    query: "AI"
+    category: "science"
+    language: "en"
+    country: "us"
+    last_fetch: null
+
+  - name: "Health AI News"
+    source_type: "newsapi"
+    enabled: true
+    max_items: 10
+    update_interval: 3600
+    query: "AI"
+    category: "health"
+    language: "en"
+    country: "us"
+    last_fetch: null
+
+# Global settings
+settings:
+  max_articles_per_digest: 30
+  deduplication_enabled: true
+  cache_ttl: 86400 # 24 hours in seconds
+  rate_limit_delay: 1 # seconds between API calls

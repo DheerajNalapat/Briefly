@@ -1,0 +1,283 @@
+{
+  "timestamp": "2025-08-19T01:23:51.420369+00:00",
+  "total_items": 27,
+  "topics": {
+    "latest ai news": 4,
+    "trending artificial intelligence": 5,
+    "machine learning breakthroughs": 6,
+    "deep learning research news": 6,
+    "ai startup funding news": 6
+  },
+  "items": [
+    {
+      "title": "Latest AI Breakthroughs and News: June, July, August 2025",
+      "url": "https://www.crescendo.ai/news/latest-ai-news-and-updates",
+      "source_domain": "www.crescendo.ai",
+      "summary": "Summary: DeepCogito v2, an open-source AI model, has been released with improved logical reasoning and task planning. Developers say it outperforms many closed",
+      "published_at": null,
+      "topic": "latest ai news",
+      "score": 2.8,
+      "content_hash": "761a7b22b77da5af815903f02dc57e0b"
+    },
+    {
+      "title": "AI News | Latest AI News, Analysis & Events",
+      "url": "https://www.artificialintelligence-news.com/",
+      "source_domain": "www.artificialintelligence-news.com",
+      "summary": "SoftBank chief: Forget AGI, ASI will be here within 10 years · Why security chiefs demand urgent regulation of AI like DeepSeek · Is Perplexity AI's $34.5b",
+      "published_at": null,
+      "topic": "latest ai news",
+      "score": 2.6,
+      "content_hash": "c784e809c443502fb75a1b0a2b2aa576"
+    },
+    {
+      "title": "Artificial Intelligence - AI News - Reuters",
+      "url": "https://www.reuters.com/technology/artificial-intelligence/",
+      "source_domain": "www.reuters.com",
+      "summary": "AI startup Cohere valued at $6.8 billion in latest fundraising, hires Meta exec. Canadian AI startup Cohere was valued at $6.8 billion",
+      "published_at": null,
+      "topic": "latest ai news",
+      "score": 2.4,
+      "content_hash": "2330bccf31bb5b92fd2a03e9243d919f"
+    },
+    {
+      "title": "AI News & Artificial Intelligence | TechCrunch",
+      "url": "https://techcrunch.com/category/artificial-intelligence/",
+      "source_domain": "techcrunch.com",
+      "summary": "News coverage on artificial intelligence and machine learning tech, the companies building them, and the ethical issues AI raises today.",
+      "published_at": null,
+      "topic": "latest ai news",
+      "score": 3.2,
+      "content_hash": "93b231f501cf8432134329d54e477f6c"
+    },
+    {
+      "title": "Latest Trends in Artificial Intelligence | element14 India",
+      "url": "https://in.element14.com/latest-trends-in-artificial-intelligence?srsltid=AfmBOorCVcLTZpV9eynbsM1xpMeMIv6ZNg4lnYuOJwLE9p4uYiypcjRj",
+      "source_domain": "in.element14.com",
+      "summary": "Latest Trends in Artificial Intelligence · 1. Intelligent Process Automation · 2. A Shift Toward Cybersecurity · 3. AI for Personalised Services · 4. Automated",
+      "published_at": null,
+      "topic": "trending artificial intelligence",
+      "score": 3.0,
+      "content_hash": "b52d779d5b4273b2ceeadcd19466c165"
+    },
+    {
+      "title": "[PDF] Trends – Artificial Intelligence (AI) - BOND",
+      "url": "https://www.bondcap.com/report/pdf/Trends_Artificial_Intelligence.pdf",
+      "source_domain": "www.bondcap.com",
+      "summary": "Yes, It Is • AI User + Usage + CapEx Growth = Unprecedented • AI Model Compute Costs High / Rising + Inference Costs Per Token Falling = Performance Converging + Developer Usage Rising • AI Usage + Cost + Loss Growth = Unprecedented • AI Monetization Threats = Rising Competition + Open-Source Momentum + China’s Rise • AI & Physical World Ramps = Fast + Data-Driven • Global Internet User Ramps Powered by AI from Get-Go = Growth We Have Not Seen Likes of Before • AI & Work Evolution = Real + Rapid 9 1 2 3 4 5 6 7 8 Outline 10 Technology Compounding = Numbers Behind The Momentum 11 Technology Compounding Over Thousand-Plus Years = Better + Faster + Cheaper → More… Note: Chart expressed in trillions of real GDP as measured by 2011 ‘GK$’ on a logarithmic scale.",
+      "published_at": null,
+      "topic": "trending artificial intelligence",
+      "score": 2.8,
+      "content_hash": "8abca8d3a44fdec80126bad4f18d61d4"
+    },
+    {
+      "title": "The Top Artificial Intelligence Trends - IBM",
+      "url": "https://www.ibm.com/think/insights/artificial-intelligence-trends",
+      "source_domain": "www.ibm.com",
+      "summary": "Its head-turning improvement over prior state-of-the-art performance on highly technical math and coding benchmarks initiated an arms race in so-called “reasoning models.” Their enhanced performance on tasks requiring logical decision-making figures to play an important role in the development of agentic AI. AI models Explore IBM Granite IBM® Granite® is a family of open, performant and trusted AI models tailored for business and optimized to scale your AI applications. IBM watsonx is powered by the latest AI models to intelligently process conversations and provide help whenever and wherever you may need it. IBM watsonx is powered by the latest AI models to intelligently process conversations and provide help whenever and wherever you may need it.",
+      "published_at": null,
+      "topic": "trending artificial intelligence",
+      "score": 2.6,
+      "content_hash": "8a458ac0c413850d4e109b0a94ff7b81"
+    },
+    {
+      "title": "Future of AI: 7 Key AI Trends For 2025 & 2026 - Exploding Topics",
+      "url": "https://explodingtopics.com/blog/future-of-ai",
+      "source_domain": "explodingtopics.com",
+      "summary": "There’s little doubt we’ll see advances in AI technology over the coming years. **_Image 16: undefinedMagic AI says its platform will be like having a colleague inside the computer to assist with coding tasks._** **_Image 18: undefinedWith AI, tasks like fraud monitoring, customer support, and personalized marketingcan be automated._** **_Image 19: undefinedAlmost 7 in 10 financial services professionals say their company has adopted AI for data analytics._** Analysts usually spend hours reading and analyzing company filings, but this AI application extracts that data and automatically summarizes the key information. The company’s AI is able to utilize human data to create human models on the platform and use those to test the drug.",
+      "published_at": null,
+      "topic": "trending artificial intelligence",
+      "score": 2.4,
+      "content_hash": "a88c565ca447e0bc9966097e7136da0a"
+    },
+    {
+      "title": "131 AI Statistics and Trends for (2024) | National University",
+      "url": "https://www.nu.edu/blog/ai-statistics-trends/",
+      "source_domain": "www.nu.edu",
+      "summary": "In this comprehensive exploration, we delve into 131 AI Statistics and Trends (2025), offering a panoramic view of AI’s integration into businesses, its demographic reach, the burgeoning AI job market, educational initiatives, business owner perspectives, consumer usage, trust issues, and regulatory discussions. Image 2: 77% of companies are either using or exploring the use of AI in their businesses AI and Education Image 6: AI statistics for business owners  Business Owners and AI *   65% of consumers trust businesses that use AI.8 *   14% of consumers do not trust businesses that use AI. Teaching & Education Business & Marketing Healthcare & Nursing Social Sciences & Psychology Engineering & Technology Criminal Justice & Public Service Law Arts & Humanities Science & Math ",
+      "published_at": null,
+      "topic": "trending artificial intelligence",
+      "score": 2.2,
+      "content_hash": "90d6b97254dea44be5b1f67c95d4aa6d"
+    },
+    {
+      "title": "Top 5 Breakthroughs in AI and Machine Learning for 2024 - Evonence",
+      "url": "https://www.evonence.com/blog/top-5-breakthroughs-in-ai-and-machine-learning-for-2024",
+      "source_domain": "www.evonence.com",
+      "summary": "Top 5 AI & ML Breakthroughs for 2024— Evonence | Google Cloud Partner — Evonence | Google Cloud Partner Generative AI Services Generative AI Services Generative AI Services Top 5 Breakthroughs in AI and Machine Learning for 2024 The world of Artificial Intelligence (AI) and Machine Learning (ML) is evolving at a breakneck pace. In this blog, we'll dive into the top five breakthroughs in AI and ML that are set to define the year. The future of AI and ML is not just about what technology can do; it's about what it should do for humanity. We (evonence.cloud) and selected third parties (4) collect personal information as specified in the privacy policy and use cookies or similar technologies for technical purposes and, with your consent, for **experience, measurement and “marketing (personalized ads)”** as specified in the cookie policy.",
+      "published_at": null,
+      "topic": "machine learning breakthroughs",
+      "score": 3.0,
+      "content_hash": "1a71768cc099361a6dd7a491e0e1cc09"
+    },
+    {
+      "title": "Nobel Prize in Physics Awarded for Breakthroughs in Machine ...",
+      "url": "https://www.scientificamerican.com/article/nobel-prize-in-physics-awarded-for-breakthroughs-in-machine-learning/",
+      "source_domain": "www.scientificamerican.com",
+      "summary": "“Machine-learning models can learn intricate interdependencies from data, make predictions on the ideal composition of materials for a given",
+      "published_at": null,
+      "topic": "machine learning breakthroughs",
+      "score": 2.8,
+      "content_hash": "6cace641e16abe34b898641d4f700419"
+    },
+    {
+      "title": "Advancements in AI and Machine Learning",
+      "url": "https://ep.jhu.edu/news/advancements-in-ai-and-machine-learning/",
+      "source_domain": "ep.jhu.edu",
+      "summary": "Advancements in AI and Machine Learning 3.   Advancements in AI and Machine Learning Artificial Intelligence (AI) and Machine Learning (ML) are leading today’s technological innovations across industries. For engineers like you, learning how to integrate AI and ML into your skill set opens new avenues for career and personal growth. AI and ML advancements are transforming engineering by automating complex tasks and enhancing decision-making processes for professionals. For engineering professionals, staying on top of developments in AI keeps your skills relevant, making you a more competitive candidate for new jobs or advanced positions. The Johns Hopkins University Engineering for Professionals program (JHU EP) offers a master’s degree in Artificial Intelligence that can help you get ahead in the world of AI.",
+      "published_at": null,
+      "topic": "machine learning breakthroughs",
+      "score": 2.6,
+      "content_hash": "21a67356f7c370334eac790f8657ca13"
+    },
+    {
+      "title": "Artificial Intelligence Breakthroughs: Key Developments to Expect in ...",
+      "url": "https://www.ironhack.com/us/blog/artificial-intelligence-breakthroughs-a-look-ahead-to-2024",
+      "source_domain": "www.ironhack.com",
+      "summary": "These are the building blocks that **enable AI systems to learn from data, make predictions, and adapt to new information.** Here’s a brief overview of the primary types of machine learning algorithms: 1.   **Supervised learning:** this approach trains the AI system on labeled data. 2.   **Unsupervised learning:** this approach involves teaching AI systems on unlabeled data, with the goal of the algorithm being to **discover hidden patterns or structures** within the data. The demand for AI professionals will skyrocket, with companies seeking data scientists, machine learning engineers, and AI developers to lead innovation. *   Image 30Image 31   5 minutes   ### AI Skills Every Developer Needs in 2025 *   Image 40Image 41   7 minutes   ### AI Skills EVERY Professional Needs in 2025",
+      "published_at": null,
+      "topic": "machine learning breakthroughs",
+      "score": 2.4,
+      "content_hash": "cc9806858a66ce249164692d3a9796cf"
+    },
+    {
+      "title": "Timeline of machine learning - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Timeline_of_machine_learning",
+      "source_domain": "en.wikipedia.org",
+      "summary": "Scientists begin creating programs for computers to analyze large amounts of data and draw conclusions– or \"learn\"– from the results.Support-vector machines (SVMs) and recurrent neural networks (RNNs) become popular. | 1992 | Achievement | Machines Playing Backgammon | Gerald Tesauro develops TD-Gammon, a computer backgammon program that uses an artificial neural network trained using temporal-difference learning (hence the 'TD' in the name). | 2017 | Discovery | Transformer | A team at Google Brain invent the transformer \"Transformer (machine learning model)\") architecture, which allows for faster parallel training of neural networks on sequential data like text. | Computer science | * Algorithms * Artificial intelligence * Binary prefixes * Cryptography * Machine learning * Quantum computing and communication |",
+      "published_at": null,
+      "topic": "machine learning breakthroughs",
+      "score": 2.2,
+      "content_hash": "f35f0de03e1867bb6a747aeeee6382aa"
+    },
+    {
+      "title": "Advancements in Artificial Intelligence and Machine Learning",
+      "url": "https://online-engineering.case.edu/blog/advancements-in-artificial-intelligence-and-machine-learning",
+      "source_domain": "online-engineering.case.edu",
+      "summary": "In recent years, advancements in artificial intelligence (AI) and machine learning (ML) have driven optimization in systems and control engineering. Deep learning in natural language processing has helped develop applications that understand, interpret and generate human speech and language. As AI models, particularly deep learning networks, have become more complex, their processes appear as \"black boxes,” meaning no one understands how they make decisions. By clicking \"Start Your Application\" and submitting this form, I agree to receive text messages, emails and other communication regarding educational programs and opportunities, and to be contacted by Case Western Reserve University and Everspring, its authorized representative.",
+      "published_at": null,
+      "topic": "machine learning breakthroughs",
+      "score": 2.0,
+      "content_hash": "4876793683c1f3f58badfb38eecf3c50"
+    },
+    {
+      "title": "Deep Learning - latest research news and features - Tech Xplore",
+      "url": "https://techxplore.com/tags/deep+learning/",
+      "source_domain": "techxplore.com",
+      "summary": "Deep Learning - latest research news and features Machine learning & AI News on deep learning AI model analyzes social media posts to detect signs of depression Machine learning & AI Machine learning & AI A trio of AI researchers at Google's Google DeepMind, working with a colleague from the University of Toronto, report that the AI algorithm Dreamer can learn to self-improve by mastering Minecraft in a short amount of time. ### Phys.org Daily science news on research developments and the latest scientific innovations ### Science X The most comprehensive sci-tech news coverage on the web Science X Daily and the Weekly Email Newsletter are free features that allow you to receive your favorite sci-tech news updates in your email inbox ",
+      "published_at": null,
+      "topic": "deep learning research news",
+      "score": 3.0,
+      "content_hash": "ed02198801f26d24a7cd4226d4744d14"
+    },
+    {
+      "title": "Deep Learning - latest research news and features - Phys.org",
+      "url": "https://phys.org/tags/deep+learning/",
+      "source_domain": "phys.org",
+      "summary": "Deep Learning - latest research news and features ### Science X Account News on _deep learning_ ### Researchers develop a new AI model to speed up tornado damage assessments and recovery Nature is still too complex for artificial intelligence (AI) modeling to be effective, but the tipping point is close, according to a new study that found the technology may still trip at the last real-world hurdle. Image 14: Medical Xpress ### Medical Xpress Medical research advances and health news Image 16: Science X ### Science X The most comprehensive sci-tech news coverage on the web Science X Daily and the Weekly Email Newsletter are free features that allow you to receive your favorite sci-tech news updates in your email inbox",
+      "published_at": null,
+      "topic": "deep learning research news",
+      "score": 2.8,
+      "content_hash": "b1d960c156766d7a6ad8f5b4e4dab457"
+    },
+    {
+      "title": "The Batch | DeepLearning.AI | AI News & Insights",
+      "url": "https://www.deeplearning.ai/the-batch/",
+      "source_domain": "www.deeplearning.ai",
+      "summary": "The Batch | DeepLearning.AI | AI News & Insights The Batch AI News and Insights: On Monday, a United States District Court ruled that training LLMs on copyrighted books constitutes fair use. The Batch AI News and Insights: There’s a new breed of GenAI Application Engineers who can build more-powerful applications faster than was possible before, thanks to generative AI. The Batch AI News and Insights: Everyone can benefit by learning to code with AI! The Batch AI News and Insights: I am alarmed by the proposed cuts to U.S. funding for basic research, analyzed here, and the impact this would have for U.S. competitiveness in AI and other areas. The Batch AI News and Insights: I am so sorry that the U.S. is letting down our friends and allies.",
+      "published_at": null,
+      "topic": "deep learning research news",
+      "score": 2.6,
+      "content_hash": "d665b039ecd15302e13e3b0feffd61bb"
+    },
+    {
+      "title": "Deep & Reinforcement Learning - AI News",
+      "url": "https://www.artificialintelligence-news.com/categories/ai-deep-reinforcement-learning/",
+      "source_domain": "www.artificialintelligence-news.com",
+      "summary": "AI News is part of the TechForge Publications series Deep & Reinforcement Learning AI Deep and Reinforcement Learning News. Explore the latest news and insights on deep and reinforcement learning here at AI News. Deep & Reinforcement Learning Deep & Reinforcement Learning Deep & Reinforcement Learning Deep & Reinforcement Learning Deep & Reinforcement Learning Deep & Reinforcement Learning Deep & Reinforcement Learning Deep & Reinforcement Learning Deep & Reinforcement Learning Baidu deploys its ERNIE Bot generative AI to the public Deep & Reinforcement Learning IBM Research unveils breakthrough analog AI chip for efficient deep learning Deep & Reinforcement Learning Subscribe now to get all our premium content and latest tech news delivered straight to your inbox AI News is part of TechForge",
+      "published_at": null,
+      "topic": "deep learning research news",
+      "score": 2.4,
+      "content_hash": "c6b0889183dee18d3ec933514040ddb2"
+    },
+    {
+      "title": "Exploring Deep Learning AI for Cancer Treatment | NC State News",
+      "url": "https://news.ncsu.edu/2025/05/exploring-deep-learning-ai-for-cancer-treatment/",
+      "source_domain": "news.ncsu.edu",
+      "summary": "Winners of a pilot grant, researchers are exploring how an AI neural network can match medication to patients’ DNA —a precision medicine approach for a future of harnessing data for personalized and cost-effective cancer care. Researchers at NC State and UNC-Chapel Hill are exploring how to potentially use AI to match anti-cancer drugs to a patient’s specific DNA. Using a deep learning AI model also helped the research team overcome another challenge: the lack of existing data on molecular information for both human DNA and anti-cancer drugs. Future iterations of the research team’s deep learning model could incorporate electronic health records and hospital-based genetic testing results, providing doctors with a powerful, cost-effective and collaborative AI tool to guide anti-cancer treatment decisions.",
+      "published_at": null,
+      "topic": "deep learning research news",
+      "score": 2.2,
+      "content_hash": "8c04298499d8aa558bed16cb3138558d"
+    },
+    {
+      "title": "Machine Learning News - Google Groups",
+      "url": "https://groups.google.com/g/ml-news",
+      "source_domain": "groups.google.com",
+      "summary": "[[CFP] Northern Lights Deep Learning Conference (9th edition), Tromsø (“North Pole”), Norway **Deadline for full paper submissions: September 01, 2025.** The 2026 edition of the Northern Lights](https://groups.google.com/g/ml-news/c/mx8nWtsSrxA) [[CFP] Northern Lights Deep Learning Conference (9th edition), Tromsø (“North Pole”), Norway **Deadline for full paper submissions: September 01, 2025.** The 2026 edition of the Northern Lights](https://groups.google.com/g/ml-news/c/mx8nWtsSrxA) [[CFP] RHCML 2025 – Responsible ML in Healthcare @ ECML PKDD – Deadline Extended to June 19 (AoE) Dear Colleagues, We're writing to let you know that the submission deadline for the Workshop on](https://groups.google.com/g/ml-news/c/sfTsbp-0Nx8) [[CFP] RHCML 2025 – Responsible ML in Healthcare @ ECML PKDD – Deadline Extended to June 19 (AoE) Dear Colleagues, We're writing to let you know that the submission deadline for the Workshop on](https://groups.google.com/g/ml-news/c/sfTsbp-0Nx8)",
+      "published_at": null,
+      "topic": "deep learning research news",
+      "score": 2.0,
+      "content_hash": "7fa561f2754a54b270cd0d913856647d"
+    },
+    {
+      "title": "The Latest VC Investment Deals in AI Startups - 2025 | News",
+      "url": "https://www.crescendo.ai/news/latest-vc-investment-deals-in-ai-startups",
+      "source_domain": "www.crescendo.ai",
+      "summary": "*   **Details:** Enterprise AI platform Glean raised $150 million in Series F funding at a $7.2 billion valuation. *   **Details:** A new AI-powered insurance technology company raised $75 million to enhance claims processing and underwriting. *   **Details:** SoftBank led a funding round for AI robotics startup Skild AI, raising the company's valuation to nearly $4 billion. *   **Recipient AI Company:** Conveo**‍** *   ‍**Recipient AI Company:** Tenstorrent *   **Details:** Crescendo, a pioneer of augmented AI in the customer service industry, secured a $50 million Series C funding round, valuing the company at $500 million. *   **Recipient AI Company:** Briink**‍** *   **Details:** Harvey, an AI startup developing legal technology solutions, raised $100 million in a Series C funding round.",
+      "published_at": null,
+      "topic": "ai startup funding news",
+      "score": 3.0,
+      "content_hash": "a3aa74561f95290beb035d275aa34bd7"
+    },
+    {
+      "title": "US AI startups see funding surge while more VC funds ... - Reuters",
+      "url": "https://www.reuters.com/business/us-ai-startups-see-funding-surge-while-more-vc-funds-struggle-raise-data-shows-2025-07-15/",
+      "source_domain": "www.reuters.com",
+      "summary": "REUTERS/Dado Ruvic/Illustration Purchase Licensing Rights, opens new tab July 15 (Reuters) - U.S. startup funding surged 75.6% in the first half of 2025, thanks to the continued AI boom, putting it on track for its second-best year ever, even as venture capital firms struggled to raise money, a report from PitchBook on Tuesday showed. Standout deals included OpenAI’s $40 billion round and Meta’s (META.O), opens new tab$14.3 billion purchase of a stake in Scale AI. Our Standards: The Thomson Reuters Trust Principles., opens new tab *   About Reuters, opens new tab *   Reuters News Agency, opens new tab *   Reuters and AI, opens new tab *   Reuters Leadership, opens new tab *   Reuters Diversity Report, opens new tab",
+      "published_at": null,
+      "topic": "ai startup funding news",
+      "score": 2.8,
+      "content_hash": "789b3c24145c63dda3cab2740007d6cb"
+    },
+    {
+      "title": "VC News Daily: Venture Capital Financings and Technology Startups",
+      "url": "https://vcnewsdaily.com/",
+      "source_domain": "vcnewsdaily.com",
+      "summary": "SAN FRANCISCO, CA, BlinkOps announced the close of its $50 million Series B funding round. SAN FRANCISCO, CA, LegalOn Technologies, a global leader in legal AI for contracting, today announced a $50 million Series E, bringing its total funding to $200 million. PHILADELPHIA, PA, Asylon, a leading provider of robotic perimeter security technology, today announced the close of its $24 million Series B funding round. SAN FRANCISCO, CA, Vanta, the leading AI-powered trust management platform, announced its $150 million Series D funding round. WALNUT CREEK, CA, BetterComp, a leading provider of compensation management software, today announced its $33 million Series A funding round, led by Ten Coves Capital.",
+      "published_at": null,
+      "topic": "ai startup funding news",
+      "score": 2.6,
+      "content_hash": "89da44103143e0f600ed0f608c1010b3"
+    },
+    {
+      "title": "Startup Funding Outlook: VCs 'Chasing The AI Wave' But With Caution",
+      "url": "https://news.crunchbase.com/venture/startup-funding-ai-ipo-outlook-h2-2025/",
+      "source_domain": "news.crunchbase.com",
+      "summary": "Matt Murphy, partner at San Francisco-based Menlo Ventures, believes funding is exploding because “everyone is chasing the AI wave and many firms who started late are playing catch-up.” “There are many examples of AI companies raising follow-on rounds in six to 12 months versus the more standard two years or more,” Murphy said. *   Q2 Global Venture Funding Climbs In A Blockbuster Quarter For AI And As Capital Concentrates In Larger Companies [![Image 8: Illustration of a guy watering plants with a blocked hose - Global [Dom Guzman]](https://news.crunchbase.com/wp-content/uploads/quarterly-global-3-300x168.jpg)](https://news.crunchbase.com/venture/global-funding-strong-q1-2025-ai-data/ \"Q1 Global Startup Funding Posts Strongest Quarter Since Q2 2022 With A Third Going To Massive OpenAI Deal  \")",
+      "published_at": null,
+      "topic": "ai startup funding news",
+      "score": 2.4,
+      "content_hash": "cddbd617660752d6d91635e2e5de582b"
+    },
+    {
+      "title": "Funding news and analysis - TechCrunch",
+      "url": "https://techcrunch.com/tag/funding/",
+      "source_domain": "techcrunch.com",
+      "summary": "Funding news and analysis | TechCrunch Funding news and analysis | TechCrunch =============== Skip to content TechCrunch Desktop Logo TechCrunch Mobile Logo Latest Startups Venture Apple Security AI Apps Events Podcasts Newsletters Search Submit Site Search Toggle Mega Menu Toggle Topics Latest AI Amazon Apps Biotech & Health Climate Cloud Computing Commerce Crypto Enterprise EVs Fintech Fundraising Gadgets Gaming Google Government & Policy Hardware Instagram Layoffs Media & Entertainment Meta Microsoft Privacy Robotics Security Social Space Startups TikTok Transportation Venture More from TechCrunch Events Startup Battlefield StrictlyVC Newsletters Podcasts Videos Partner Content TechCrunch Brand Studio Crunchboard Contact Us Funding TechCrunch reports on the latest funding for startups in the tech ecosystem—software, hardware, and every type of company. From unicorns raising their final pre-IPO round, to angel rounds for cutting edge artificial intelligence startups, TechCrunch cover...",
+      "published_at": null,
+      "topic": "ai startup funding news",
+      "score": 3.2,
+      "content_hash": "e9dc007375a408f45e9c528737b22bc8"
+    },
+    {
+      "title": "Requests for Startups - Y Combinator",
+      "url": "https://www.ycombinator.com/rfs",
+      "source_domain": "www.ycombinator.com",
+      "summary": "At YC, I would like to fund more founders working on full-stack AI companies. What we like to do at YC is to peek into the future, and talking to a voice AI bot feels like experiencing the future - similar to how it felt to ride an autonomous car for the first time - it just works. I'd love to work with startups building the next generation of AI personal assistant: an LLM-powered system that deeply understands your work, routines, communication history, and personal preferences. If you're working on using AI to create personalized learning tools for anything, we'd love to hear from you. Imagine how big the opportunity is for the company that uses AI to make people feel actually safe in their homes.",
+      "published_at": null,
+      "topic": "ai startup funding news",
+      "score": 2.0,
+      "content_hash": "f2c80edd49a733efb9bc95cc3486bea6"
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+rss_sources:
+- category: Technology
+  enabled: true
+  last_fetch: null
+  last_hash: null
+  max_items: 8
+  name: MIT Technology Review AI
+  update_interval: 3600
+  url: https://www.technologyreview.com/feed/ai/
+- category: Technology
+  enabled: true
+  last_fetch: '2025-08-19T05:16:17.879797'
+  last_hash: 2f5ec286f876cb6108431ce3e684b579
+  max_items: 8
+  name: TechCrunch AI
+  update_interval: 1800
+  url: https://techcrunch.com/tag/artificial-intelligence/feed/
+- category: Technology
+  enabled: true
+  last_fetch: '2025-08-19T05:16:19.118402'
+  last_hash: fc8ddabcb10526f995aa89d2fbcf54c7
+  max_items: 8
+  name: VentureBeat AI
+  update_interval: 1800
+  url: https://venturebeat.com/category/ai/feed/
+- category: Technology
+  enabled: true
+  last_fetch: '2025-08-19T05:16:21.578461'
+  last_hash: 8b58ad5ceb918a4242b3281f2d7a9210
+  max_items: 6
+  name: Ars Technica AI
+  update_interval: 3600
+  url: https://feeds.arstechnica.com/arstechnica/technology-lab
+- category: Technology
+  enabled: true
+  last_fetch: '2025-08-19T05:16:22.776183'
+  last_hash: 38e54bf95a64fea405b1be221f4efcbf
+  max_items: 6
+  name: Wired AI
+  update_interval: 3600
+  url: https://www.wired.com/feed/rss

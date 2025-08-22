@@ -1,0 +1,43 @@
+sources:
+- base_url: https://techcrunch.com
+  category: Technology
+  delay: 2
+  link_selectors:
+  - a
+  name: TechCrunch AI
+  summary_selectors:
+  - p
+  title_selectors:
+  - h1
+  - h2
+  - h3
+  - h4
+  url: https://techcrunch.com/tag/artificial-intelligence/
+- base_url: https://venturebeat.com
+  category: Technology
+  delay: 2
+  link_selectors:
+  - a
+  name: VentureBeat AI
+  summary_selectors:
+  - p
+  title_selectors:
+  - h1
+  - h2
+  - h3
+  - h4
+  url: https://venturebeat.com/category/ai/
+- base_url: https://www.technologyreview.com
+  category: Technology
+  delay: 3
+  link_selectors:
+  - a
+  name: MIT Technology Review
+  summary_selectors:
+  - p
+  title_selectors:
+  - h1
+  - h2
+  - h3
+  - h4
+  url: https://www.technologyreview.com/topic/artificial-intelligence/

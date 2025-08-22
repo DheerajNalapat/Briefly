@@ -1,0 +1,438 @@
+{
+  "date": "2025-08-19T05:16:23.777001",
+  "summary": "Found 28 RSS news items from 4 sources",
+  "total_items": 28,
+  "sources_summary": {
+    "TechCrunch AI": 8,
+    "VentureBeat AI": 8,
+    "Ars Technica AI": 6,
+    "Wired AI": 6
+  },
+  "categories_summary": {
+    "Technology": 28
+  },
+  "feed_stats": {
+    "https://techcrunch.com/tag/artificial-intelligence/feed/": {
+      "source": "TechCrunch AI",
+      "count": 8,
+      "last_update": "2025-08-19T05:16:17.879703"
+    },
+    "https://venturebeat.com/category/ai/feed/": {
+      "source": "VentureBeat AI",
+      "count": 8,
+      "last_update": "2025-08-19T05:16:19.118323"
+    },
+    "https://feeds.arstechnica.com/arstechnica/technology-lab": {
+      "source": "Ars Technica AI",
+      "count": 6,
+      "last_update": "2025-08-19T05:16:21.578394"
+    },
+    "https://www.wired.com/feed/rss": {
+      "source": "Wired AI",
+      "count": 6,
+      "last_update": "2025-08-19T05:16:22.776116"
+    }
+  },
+  "top_stories": [
+    {
+      "title": "An Account Using the Same Name as Trump’s BLS Pick Posted Red-Pilled Conspiracy Theories",
+      "source": "Wired AI",
+      "category": "Technology",
+      "link": "https://www.wired.com/story/twitter-ej-antoni-trump-bls-conspiracy-theories-epstein-covid-election-denial/",
+      "summary": "A WIRED review of a now deleted Twitter account that used the screen name “Dr. Erwin J. Antoni III” shows it posted conspiratorial content about the 2020 election, Covid-19, and Jeffrey Epstein.",
+      "published_at": "2025-08-18T21:25:31",
+      "fetched_at": "2025-08-19T05:16:22.776116"
+    },
+    {
+      "title": "Nvidia releases a new small, open model Nemotron-Nano-9B-v2 with toggle on/off reasoning",
+      "source": "VentureBeat AI",
+      "category": "Technology",
+      "link": "https://venturebeat.com/ai/nvidia-releases-a-new-small-open-model-nemotron-nano-9b-v2-with-toggle-on-off-reasoning/",
+      "summary": "Developers are free to create and distribute derivative models. Importantly, Nvidia does not claim ownership of any outputs generated...",
+      "published_at": "2025-08-18T21:24:47",
+      "fetched_at": "2025-08-19T05:16:19.118323"
+    },
+    {
+      "title": "Hugging Face: 5 ways enterprises can slash AI costs without sacrificing performance",
+      "source": "VentureBeat AI",
+      "category": "Technology",
+      "link": "https://venturebeat.com/ai/hugging-face-5-ways-enterprises-can-slash-ai-costs-without-sacrificing-performance/",
+      "summary": "Ultimately, model makers and enterprises are focusing on the wrong issue: They should be computing smarter, not harder.",
+      "published_at": "2025-08-18T21:10:04",
+      "fetched_at": "2025-08-19T05:16:19.118339"
+    },
+    {
+      "title": "GEPA optimizes LLMs without costly reinforcement learning",
+      "source": "VentureBeat AI",
+      "category": "Technology",
+      "link": "https://venturebeat.com/ai/gepa-optimizes-llms-without-costly-reinforcement-learning/",
+      "summary": "Moving beyond the slow, costly trial-and-error of RL, GEPA teaches AI systems to learn and improve using natural language.",
+      "published_at": "2025-08-18T20:41:22",
+      "fetched_at": "2025-08-19T05:16:19.118349"
+    },
+    {
+      "title": "TensorZero nabs $7.3M seed to solve the messy world of enterprise LLM development",
+      "source": "VentureBeat AI",
+      "category": "Technology",
+      "link": "https://venturebeat.com/ai/tensorzero-nabs-7-3m-seed-to-solve-the-messy-world-of-enterprise-llm-development/",
+      "summary": "TensorZero raises $7.3 million to build an open-source AI infrastructure stack that helps enterprises scale and optimize large language model (LLM) applications with unified tools for observability, f...",
+      "published_at": "2025-08-18T19:13:32",
+      "fetched_at": "2025-08-19T05:16:19.118360"
+    },
+    {
+      "title": "The West Texas Measles Outbreak Has Ended",
+      "source": "Wired AI",
+      "category": "Technology",
+      "link": "https://www.wired.com/story/the-west-texas-measles-outbreak-has-ended/",
+      "summary": "According to state health officials, a measles outbreak that started in an undervaccinated community and killed two children is now over.",
+      "published_at": "2025-08-18T18:30:57",
+      "fetched_at": "2025-08-19T05:16:22.776138"
+    },
+    {
+      "title": "The looming crisis of AI speed without guardrails",
+      "source": "VentureBeat AI",
+      "category": "Technology",
+      "link": "https://venturebeat.com/ai/the-looming-crisis-of-ai-speed-without-guardrails/",
+      "summary": "The future will arrive with or without our guardrails. We must design AI’s structures now for a future of abundance rather than disruption.",
+      "published_at": "2025-08-18T18:24:27",
+      "fetched_at": "2025-08-19T05:16:19.118370"
+    },
+    {
+      "title": "Jackery Explorer 1000 Deal: $350 Off Battery Bank Right Now",
+      "source": "Wired AI",
+      "category": "Technology",
+      "link": "https://www.wired.com/story/jackery-explorer-1000-deal/",
+      "summary": "Save cash and store power with a massive discount on this portable battery bank.",
+      "published_at": "2025-08-18T18:06:38",
+      "fetched_at": "2025-08-19T05:16:22.776149"
+    },
+    {
+      "title": "WIRED Roundup: Why GPT-5 Flopped",
+      "source": "Wired AI",
+      "category": "Technology",
+      "link": "https://www.wired.com/story/uncanny-valley-podcast-wired-roundup-why-gpt-5-flopped/",
+      "summary": "On this episode of Uncanny Valley, we dig into WIRED’s latest—from crude deportation memes to GPT-5’s negative reception.",
+      "published_at": "2025-08-18T18:01:24",
+      "fetched_at": "2025-08-19T05:16:22.776160"
+    },
+    {
+      "title": "9 Picks of the Best Gaming Mouse, Tested and Reviewed (2025)",
+      "source": "Wired AI",
+      "category": "Technology",
+      "link": "https://www.wired.com/gallery/best-gaming-mouse/",
+      "summary": "From wired to wireless to ultralight, we've tested dozens of gaming mice to find the best for work, your next MMO, and everything in between.",
+      "published_at": "2025-08-18T12:00:00",
+      "fetched_at": "2025-08-19T05:16:22.776169"
+    }
+  ],
+  "all_items": [
+    {
+      "title": "Perplexity accused of scraping websites that explicitly blocked AI scraping",
+      "link": "https://techcrunch.com/2025/08/04/perplexity-accused-of-scraping-websites-that-explicitly-blocked-ai-scraping/",
+      "summary": "Internet giant Cloudflare says it detected Perplexity crawling and scraping websites, even after customers had added technical blocks telling Perplexity not to scrape their pages.",
+      "source": "TechCrunch AI",
+      "category": "Technology",
+      "published_at": "2025-08-04T15:41:39",
+      "fetched_at": "2025-08-19T05:16:17.879703",
+      "content_hash": "701650a6c8a5670778f8c71f9e6776f3",
+      "feed_url": "https://techcrunch.com/tag/artificial-intelligence/feed/"
+    },
+    {
+      "title": "Obvio’s stop sign cameras use AI to root out unsafe drivers",
+      "link": "https://techcrunch.com/2025/06/04/obvios-stop-sign-cameras-use-ai-to-root-out-unsafe-drivers/",
+      "summary": "American streets are incredibly dangerous for pedestrians. A San Carlos, California-based startup called Obvio thinks it can change that by installing cameras at stop signs -- a solution the founders also say won’t create a panopticon.",
+      "source": "TechCrunch AI",
+      "category": "Technology",
+      "published_at": "2025-06-04T14:00:00",
+      "fetched_at": "2025-08-19T05:16:17.879724",
+      "content_hash": "ed9a5a38f00298da19358ad38eb1eb1e",
+      "feed_url": "https://techcrunch.com/tag/artificial-intelligence/feed/"
+    },
+    {
+      "title": "Breakneck data center growth challenges Microsoft’s sustainability goals",
+      "link": "https://techcrunch.com/2025/06/02/breakneck-data-center-growth-challenges-microsofts-sustainability-goals/",
+      "summary": "Microsoft's sustainability goals are imperiled by its push into AI and cloud services.",
+      "source": "TechCrunch AI",
+      "category": "Technology",
+      "published_at": "2025-06-02T18:07:05",
+      "fetched_at": "2025-08-19T05:16:17.879735",
+      "content_hash": "fac15f4a6761fbc3a81b021dcf587e8e",
+      "feed_url": "https://techcrunch.com/tag/artificial-intelligence/feed/"
+    },
+    {
+      "title": "Gridcare thinks more than 100 GW of data center capacity is hiding in the grid",
+      "link": "https://techcrunch.com/2025/05/27/gridcare-thinks-more-than-100-gw-of-data-center-capacity-is-hiding-in-the-grid/",
+      "summary": "Gridcare raised $13.3 million for its data platform that finds underutilized capacity on the electrical grid.",
+      "source": "TechCrunch AI",
+      "category": "Technology",
+      "published_at": "2025-05-27T12:00:00",
+      "fetched_at": "2025-08-19T05:16:17.879745",
+      "content_hash": "e164985d83d2ed467a12efe69fa81f0e",
+      "feed_url": "https://techcrunch.com/tag/artificial-intelligence/feed/"
+    },
+    {
+      "title": "Meta adds another 650 MW of solar power to its AI push",
+      "link": "https://techcrunch.com/2025/05/22/meta-adds-another-650-mw-of-solar-power-to-its-ai-push/",
+      "summary": "The company already has more than 12 gigawatts of capacity in its renewable power portfolio.",
+      "source": "TechCrunch AI",
+      "category": "Technology",
+      "published_at": "2025-05-22T16:49:53",
+      "fetched_at": "2025-08-19T05:16:17.879754",
+      "content_hash": "d149183f055476ef9d752d15404cbf15",
+      "feed_url": "https://techcrunch.com/tag/artificial-intelligence/feed/"
+    },
+    {
+      "title": "Who are climate-conscious consumers? Not who you’d expect, says Northwind Climate",
+      "link": "https://techcrunch.com/2025/04/01/who-are-climate-conscious-consumers-not-who-youd-expect-says-northwind-climate/",
+      "summary": "Rather than divide people into demographic buckets, Northwind Climate analyzes survey responses for behavioral clues.",
+      "source": "TechCrunch AI",
+      "category": "Technology",
+      "published_at": "2025-04-01T19:52:59",
+      "fetched_at": "2025-08-19T05:16:17.879765",
+      "content_hash": "35bf67ce691974754f669f7b572bf89d",
+      "feed_url": "https://techcrunch.com/tag/artificial-intelligence/feed/"
+    },
+    {
+      "title": "Data centers love solar: Here’s a comprehensive guide to deals over 100 megawatts",
+      "link": "https://techcrunch.com/2025/03/30/data-centers-love-solar-heres-a-comprehensive-guide-to-deals-over-100-megawatts/",
+      "summary": "New and expanded data centers are expected to double the sector’s power demand by 2029 as tech companies rush to capitalize on AI.",
+      "source": "TechCrunch AI",
+      "category": "Technology",
+      "published_at": "2025-03-30T14:00:00",
+      "fetched_at": "2025-08-19T05:16:17.879783",
+      "content_hash": "9ffd518116859de8fda641eeae60fb46",
+      "feed_url": "https://techcrunch.com/tag/artificial-intelligence/feed/"
+    },
+    {
+      "title": "Nvidia thinks AI can solve electrical grid problems caused by AI",
+      "link": "https://techcrunch.com/2025/03/20/nvidia-thinks-ai-can-solve-electrical-grid-problems-caused-by-ai/",
+      "summary": "The Open Power AI Consortium says it will use domain-specific AI models to tackle problems in the power industry.",
+      "source": "TechCrunch AI",
+      "category": "Technology",
+      "published_at": "2025-03-20T16:41:12",
+      "fetched_at": "2025-08-19T05:16:17.879794",
+      "content_hash": "e016f07272d74a90f4167f7694f8762b",
+      "feed_url": "https://techcrunch.com/tag/artificial-intelligence/feed/"
+    },
+    {
+      "title": "Nvidia releases a new small, open model Nemotron-Nano-9B-v2 with toggle on/off reasoning",
+      "link": "https://venturebeat.com/ai/nvidia-releases-a-new-small-open-model-nemotron-nano-9b-v2-with-toggle-on-off-reasoning/",
+      "summary": "Developers are free to create and distribute derivative models. Importantly, Nvidia does not claim ownership of any outputs generated...",
+      "source": "VentureBeat AI",
+      "category": "Technology",
+      "published_at": "2025-08-18T21:24:47",
+      "fetched_at": "2025-08-19T05:16:19.118323",
+      "content_hash": "aefc5553bf881af8e1ee154334ffbe99",
+      "feed_url": "https://venturebeat.com/category/ai/feed/"
+    },
+    {
+      "title": "Hugging Face: 5 ways enterprises can slash AI costs without sacrificing performance",
+      "link": "https://venturebeat.com/ai/hugging-face-5-ways-enterprises-can-slash-ai-costs-without-sacrificing-performance/",
+      "summary": "Ultimately, model makers and enterprises are focusing on the wrong issue: They should be computing smarter, not harder.",
+      "source": "VentureBeat AI",
+      "category": "Technology",
+      "published_at": "2025-08-18T21:10:04",
+      "fetched_at": "2025-08-19T05:16:19.118339",
+      "content_hash": "1cbde21023c9333916133c00114a7e98",
+      "feed_url": "https://venturebeat.com/category/ai/feed/"
+    },
+    {
+      "title": "GEPA optimizes LLMs without costly reinforcement learning",
+      "link": "https://venturebeat.com/ai/gepa-optimizes-llms-without-costly-reinforcement-learning/",
+      "summary": "Moving beyond the slow, costly trial-and-error of RL, GEPA teaches AI systems to learn and improve using natural language.",
+      "source": "VentureBeat AI",
+      "category": "Technology",
+      "published_at": "2025-08-18T20:41:22",
+      "fetched_at": "2025-08-19T05:16:19.118349",
+      "content_hash": "e5297a5a75b6762ab889812c36ab4f41",
+      "feed_url": "https://venturebeat.com/category/ai/feed/"
+    },
+    {
+      "title": "TensorZero nabs $7.3M seed to solve the messy world of enterprise LLM development",
+      "link": "https://venturebeat.com/ai/tensorzero-nabs-7-3m-seed-to-solve-the-messy-world-of-enterprise-llm-development/",
+      "summary": "TensorZero raises $7.3 million to build an open-source AI infrastructure stack that helps enterprises scale and optimize large language model (LLM) applications with unified tools for observability, fine-tuning, and experimentation.",
+      "source": "VentureBeat AI",
+      "category": "Technology",
+      "published_at": "2025-08-18T19:13:32",
+      "fetched_at": "2025-08-19T05:16:19.118360",
+      "content_hash": "9070ca558fdc550f835e18b7402e5306",
+      "feed_url": "https://venturebeat.com/category/ai/feed/"
+    },
+    {
+      "title": "The looming crisis of AI speed without guardrails",
+      "link": "https://venturebeat.com/ai/the-looming-crisis-of-ai-speed-without-guardrails/",
+      "summary": "The future will arrive with or without our guardrails. We must design AI’s structures now for a future of abundance rather than disruption.",
+      "source": "VentureBeat AI",
+      "category": "Technology",
+      "published_at": "2025-08-18T18:24:27",
+      "fetched_at": "2025-08-19T05:16:19.118370",
+      "content_hash": "d8c81ce781be73db37b7330e228a0046",
+      "feed_url": "https://venturebeat.com/category/ai/feed/"
+    },
+    {
+      "title": "Teaching the model: Designing LLM feedback loops that get smarter over time",
+      "link": "https://venturebeat.com/ai/teaching-the-model-designing-llm-feedback-loops-that-get-smarter-over-time/",
+      "summary": "How to close the loop between user behavior and LLM performance, and why human-in-the-loop systems are still essential in the age of gen AI.",
+      "source": "VentureBeat AI",
+      "category": "Technology",
+      "published_at": "2025-08-16T20:15:00",
+      "fetched_at": "2025-08-19T05:16:19.118380",
+      "content_hash": "5d0fa5291d4940a4b50a57fceef95840",
+      "feed_url": "https://venturebeat.com/category/ai/feed/"
+    },
+    {
+      "title": "This researcher turned OpenAI’s open weights model gpt-oss-20b into a non-reasoning ‘base’ model with less alignment, more freedom",
+      "link": "https://venturebeat.com/ai/this-researcher-turned-openais-open-weights-model-gpt-oss-20b-into-a-non-reasoning-base-model-with-less-alignment-more-freedom/",
+      "summary": "Morris found it could also reproduce verbatim passages from copyrighted works, including three out of six book excerpts he tried.",
+      "source": "VentureBeat AI",
+      "category": "Technology",
+      "published_at": "2025-08-15T19:19:07",
+      "fetched_at": "2025-08-19T05:16:19.118390",
+      "content_hash": "879853c9265c78cf9d1e45d4d10d3f16",
+      "feed_url": "https://venturebeat.com/category/ai/feed/"
+    },
+    {
+      "title": "That ‘cheap’ open-source AI model is actually burning through your compute budget",
+      "link": "https://venturebeat.com/ai/that-cheap-open-source-ai-model-is-actually-burning-through-your-compute-budget/",
+      "summary": "New research reveals open-source AI models use up to 10 times more computing resources than closed alternatives, potentially negating cost advantages for enterprise deployments.",
+      "source": "VentureBeat AI",
+      "category": "Technology",
+      "published_at": "2025-08-15T01:24:49",
+      "fetched_at": "2025-08-19T05:16:19.118399",
+      "content_hash": "d828dfebb7010703589836d0f8bf4e93",
+      "feed_url": "https://venturebeat.com/category/ai/feed/"
+    },
+    {
+      "title": "Is AI really trying to escape human control and blackmail people?",
+      "link": "https://arstechnica.com/information-technology/2025/08/is-ai-really-trying-to-escape-human-control-and-blackmail-people/",
+      "summary": "Opinion: Theatrical testing scenarios explain why AI models produce alarming outputs—and why we fall for it.",
+      "source": "Ars Technica AI",
+      "category": "Technology",
+      "published_at": "2025-08-13T20:28:20",
+      "fetched_at": "2025-08-19T05:16:21.578394",
+      "content_hash": "1a0b255cfae0e9c00d3b5dba497cf305",
+      "feed_url": "https://feeds.arstechnica.com/arstechnica/technology-lab"
+    },
+    {
+      "title": "OpenAI brings back GPT-4o after user revolt",
+      "link": "https://arstechnica.com/information-technology/2025/08/openai-brings-back-gpt-4o-after-user-revolt/",
+      "summary": "After unpopular GPT-5 launch, OpenAI begins restoring optional access to previous AI models.",
+      "source": "Ars Technica AI",
+      "category": "Technology",
+      "published_at": "2025-08-13T14:08:47",
+      "fetched_at": "2025-08-19T05:16:21.578418",
+      "content_hash": "d5f50c12ba07c3805fff8bab1d8c5354",
+      "feed_url": "https://feeds.arstechnica.com/arstechnica/technology-lab"
+    },
+    {
+      "title": "Why it’s a mistake to ask chatbots about their mistakes",
+      "link": "https://arstechnica.com/ai/2025/08/why-its-a-mistake-to-ask-chatbots-about-their-mistakes/",
+      "summary": "The tendency to ask AI bots to explain themselves reveals widespread misconceptions about how they work.",
+      "source": "Ars Technica AI",
+      "category": "Technology",
+      "published_at": "2025-08-12T19:52:39",
+      "fetched_at": "2025-08-19T05:16:21.578428",
+      "content_hash": "c88a385e608db2352ab8e517d8aa0492",
+      "feed_url": "https://feeds.arstechnica.com/arstechnica/technology-lab"
+    },
+    {
+      "title": "High-severity WinRAR 0-day exploited for weeks by 2 groups",
+      "link": "https://arstechnica.com/security/2025/08/high-severity-winrar-0-day-exploited-for-weeks-by-2-groups/",
+      "summary": "Exploits allow for persistent backdooring when targets open booby-trapped archive.",
+      "source": "Ars Technica AI",
+      "category": "Technology",
+      "published_at": "2025-08-12T00:13:14",
+      "fetched_at": "2025-08-19T05:16:21.578438",
+      "content_hash": "1da8119f2694dc4b29f2ea0993c114b7",
+      "feed_url": "https://feeds.arstechnica.com/arstechnica/technology-lab"
+    },
+    {
+      "title": "The GPT-5 rollout has been a big mess",
+      "link": "https://arstechnica.com/information-technology/2025/08/the-gpt-5-rollout-has-been-a-big-mess/",
+      "summary": "OpenAI faces backlash as users complain about broken workflows and losing AI friends.",
+      "source": "Ars Technica AI",
+      "category": "Technology",
+      "published_at": "2025-08-11T22:25:34",
+      "fetched_at": "2025-08-19T05:16:21.578447",
+      "content_hash": "07aef690f53671c4bcffc582b16b5edc",
+      "feed_url": "https://feeds.arstechnica.com/arstechnica/technology-lab"
+    },
+    {
+      "title": "Encryption made for police and military radios may be easily cracked",
+      "link": "https://arstechnica.com/security/2025/08/encryption-made-for-police-and-military-radios-may-be-easily-cracked/",
+      "summary": "An encryption algorithm can have weaknesses that could allow an attacker to listen in.",
+      "source": "Ars Technica AI",
+      "category": "Technology",
+      "published_at": "2025-08-09T11:18:47",
+      "fetched_at": "2025-08-19T05:16:21.578456",
+      "content_hash": "2c179192411eabdeaf9461021d2f83ea",
+      "feed_url": "https://feeds.arstechnica.com/arstechnica/technology-lab"
+    },
+    {
+      "title": "An Account Using the Same Name as Trump’s BLS Pick Posted Red-Pilled Conspiracy Theories",
+      "link": "https://www.wired.com/story/twitter-ej-antoni-trump-bls-conspiracy-theories-epstein-covid-election-denial/",
+      "summary": "A WIRED review of a now deleted Twitter account that used the screen name “Dr. Erwin J. Antoni III” shows it posted conspiratorial content about the 2020 election, Covid-19, and Jeffrey Epstein.",
+      "source": "Wired AI",
+      "category": "Technology",
+      "published_at": "2025-08-18T21:25:31",
+      "fetched_at": "2025-08-19T05:16:22.776116",
+      "content_hash": "630c7d8fed7a8f23c4bec158d010af4a",
+      "feed_url": "https://www.wired.com/feed/rss"
+    },
+    {
+      "title": "The West Texas Measles Outbreak Has Ended",
+      "link": "https://www.wired.com/story/the-west-texas-measles-outbreak-has-ended/",
+      "summary": "According to state health officials, a measles outbreak that started in an undervaccinated community and killed two children is now over.",
+      "source": "Wired AI",
+      "category": "Technology",
+      "published_at": "2025-08-18T18:30:57",
+      "fetched_at": "2025-08-19T05:16:22.776138",
+      "content_hash": "fbae482693af3af4dce2c3b08a83a55f",
+      "feed_url": "https://www.wired.com/feed/rss"
+    },
+    {
+      "title": "Jackery Explorer 1000 Deal: $350 Off Battery Bank Right Now",
+      "link": "https://www.wired.com/story/jackery-explorer-1000-deal/",
+      "summary": "Save cash and store power with a massive discount on this portable battery bank.",
+      "source": "Wired AI",
+      "category": "Technology",
+      "published_at": "2025-08-18T18:06:38",
+      "fetched_at": "2025-08-19T05:16:22.776149",
+      "content_hash": "0682b19242d15743ee063155d8f275c1",
+      "feed_url": "https://www.wired.com/feed/rss"
+    },
+    {
+      "title": "WIRED Roundup: Why GPT-5 Flopped",
+      "link": "https://www.wired.com/story/uncanny-valley-podcast-wired-roundup-why-gpt-5-flopped/",
+      "summary": "On this episode of Uncanny Valley, we dig into WIRED’s latest—from crude deportation memes to GPT-5’s negative reception.",
+      "source": "Wired AI",
+      "category": "Technology",
+      "published_at": "2025-08-18T18:01:24",
+      "fetched_at": "2025-08-19T05:16:22.776160",
+      "content_hash": "188d9b591ea4b217be1d33af96ada5cc",
+      "feed_url": "https://www.wired.com/feed/rss"
+    },
+    {
+      "title": "9 Picks of the Best Gaming Mouse, Tested and Reviewed (2025)",
+      "link": "https://www.wired.com/gallery/best-gaming-mouse/",
+      "summary": "From wired to wireless to ultralight, we've tested dozens of gaming mice to find the best for work, your next MMO, and everything in between.",
+      "source": "Wired AI",
+      "category": "Technology",
+      "published_at": "2025-08-18T12:00:00",
+      "fetched_at": "2025-08-19T05:16:22.776169",
+      "content_hash": "93aac5a55872194dd7b1c0c9c8f9efc7",
+      "feed_url": "https://www.wired.com/feed/rss"
+    },
+    {
+      "title": "WIRED Tests Dozens of Air Purifiers a Year. Here’s What We Look For (2025)",
+      "link": "https://www.wired.com/story/how-we-test-air-purifiers/",
+      "summary": "WIRED’s air quality expert breaks down what we—and you—should consider when assessing one of these popular appliances.",
+      "source": "Wired AI",
+      "category": "Technology",
+      "published_at": "2025-08-18T11:04:00",
+      "fetched_at": "2025-08-19T05:16:22.776180",
+      "content_hash": "099c8e95522be26a10b6efbeb42eb4d8",
+      "feed_url": "https://www.wired.com/feed/rss"
+    }
+  ]
+}

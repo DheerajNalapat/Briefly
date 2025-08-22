@@ -1,0 +1,110 @@
+# Example API News Sources Configuration
+# This file demonstrates how to configure various API-based news sources
+
+sources:
+  # ArXiv Research Paper Sources
+  - name: "ArXiv AI Papers"
+    source_type: "arxiv"
+    enabled: true
+    max_items: 20
+    update_interval: 3600 # 1 hour
+    query: "AI OR artificial intelligence OR machine learning"
+    max_results: 20
+    sort_by: "submittedDate"
+    sort_order: "descending"
+    category: "Research Papers"
+
+  - name: "ArXiv Computer Vision"
+    source_type: "arxiv"
+    enabled: true
+    max_items: 15
+    update_interval: 7200 # 2 hours
+    query: "computer vision OR image recognition OR object detection"
+    max_results: 15
+    sort_by: "submittedDate"
+    sort_order: "descending"
+    category: "Computer Vision"
+
+  - name: "ArXiv NLP Papers"
+    source_type: "arxiv"
+    enabled: true
+    max_items: 15
+    update_interval: 7200 # 2 hours
+    query: "natural language processing OR NLP OR transformers OR BERT"
+    max_results: 15
+    sort_by: "submittedDate"
+    sort_order: "descending"
+    category: "Natural Language Processing"
+
+  - name: "ArXiv Robotics Papers"
+    source_type: "arxiv"
+    enabled: true
+    max_items: 10
+    update_interval: 10800 # 3 hours
+    query: "robotics OR autonomous systems OR reinforcement learning"
+    max_results: 10
+    sort_by: "submittedDate"
+    sort_order: "descending"
+    category: "Robotics"
+
+  # NewsAPI General News Sources
+  - name: "Tech News AI"
+    source_type: "newsapi"
+    enabled: true
+    max_items: 15
+    update_interval: 1800 # 30 minutes
+    query: "artificial intelligence OR AI OR machine learning"
+    category: "technology"
+    language: "en"
+    country: "us"
+
+  - name: "Business AI News"
+    source_type: "newsapi"
+    enabled: true
+    max_items: 10
+    update_interval: 3600 # 1 hour
+    query: "AI business OR artificial intelligence business OR AI investment"
+    category: "business"
+    language: "en"
+    country: "us"
+
+  - name: "Science AI News"
+    source_type: "newsapi"
+    enabled: true
+    max_items: 10
+    update_interval: 3600 # 1 hour
+    query: "AI research OR artificial intelligence research OR AI breakthrough"
+    category: "science"
+    language: "en"
+    country: "us"
+
+  - name: "Health AI News"
+    source_type: "newsapi"
+    enabled: true
+    max_items: 8
+    update_interval: 7200 # 2 hours
+    query: "AI healthcare OR artificial intelligence medicine OR AI diagnosis"
+    category: "health"
+    language: "en"
+    country: "us"
+
+  # Custom Domain Sources (NewsAPI)
+  - name: "AI News from Specific Sources"
+    source_type: "newsapi"
+    enabled: true
+    max_items: 12
+    update_interval: 2700 # 45 minutes
+    query: "artificial intelligence OR AI"
+    domains: "techcrunch.com,venturebeat.com,arstechnica.com,wired.com"
+    language: "en"
+
+  # Disabled Source Example
+  - name: "Disabled Source Example"
+    source_type: "newsapi"
+    enabled: false # This source will be skipped
+    max_items: 10
+    update_interval: 3600
+    query: "example query"
+    category: "general"
+    language: "en"
+    country: "us"

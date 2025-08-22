@@ -1,0 +1,85 @@
+sources:
+- category: Research Papers
+  country: null
+  domains: null
+  enabled: true
+  language: null
+  last_fetch: null
+  max_items: 10
+  max_results: 20
+  name: ArXiv AI Papers
+  query: AI OR artificial intelligence OR machine learning
+  sort_by: submittedDate
+  sort_order: descending
+  source_type: arxiv
+  update_interval: 3600
+- category: Computer Vision
+  country: null
+  domains: null
+  enabled: true
+  language: null
+  last_fetch: null
+  max_items: 10
+  max_results: 15
+  name: ArXiv Computer Vision
+  query: computer vision OR image recognition
+  sort_by: submittedDate
+  sort_order: descending
+  source_type: arxiv
+  update_interval: 3600
+- category: Natural Language Processing
+  country: null
+  domains: null
+  enabled: true
+  language: null
+  last_fetch: null
+  max_items: 10
+  max_results: 15
+  name: ArXiv NLP Papers
+  query: natural language processing OR NLP OR transformers
+  sort_by: submittedDate
+  sort_order: descending
+  source_type: arxiv
+  update_interval: 3600
+- category: technology
+  country: us
+  domains: null
+  enabled: true
+  language: en
+  last_fetch: null
+  max_items: 15
+  max_results: null
+  name: Tech News AI
+  query: artificial intelligence OR AI
+  sort_by: null
+  sort_order: null
+  source_type: newsapi
+  update_interval: 3600
+- category: business
+  country: us
+  domains: null
+  enabled: true
+  language: en
+  last_fetch: null
+  max_items: 10
+  max_results: null
+  name: Business AI News
+  query: AI business OR artificial intelligence business
+  sort_by: null
+  sort_order: null
+  source_type: newsapi
+  update_interval: 3600
+- category: science
+  country: us
+  domains: null
+  enabled: true
+  language: en
+  last_fetch: null
+  max_items: 10
+  max_results: null
+  name: Science AI News
+  query: AI research OR artificial intelligence research
+  sort_by: null
+  sort_order: null
+  source_type: newsapi
+  update_interval: 3600
