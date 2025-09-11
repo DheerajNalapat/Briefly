@@ -15,6 +15,7 @@ from langchain.prompts import ChatPromptTemplate
 from langchain.output_parsers import PydanticOutputParser
 
 from .models import TLDRSummary, SlackMessage, DailyDigestTLDR, ArticleTLDR
+from .categories import ArticleCategory, get_category_choices
 from slackbot.config import OPENAI_CONFIG, GEMINI_CONFIG
 
 logger = logging.getLogger(__name__)
@@ -293,18 +294,22 @@ class TLDRSummarizer:
                 return self._create_single_article_basic_tldr(article)
 
         try:
-            # Create structured TLDR using Gemini
+            # Create structured TLDR using the LLM
             prompt = ChatPromptTemplate.from_messages(
                 [
                     (
                         "system",
                         "You are an expert AI news analyst creating TLDR summaries. "
                         "Focus on the key facts, why it matters, and make it engaging for busy professionals. "
-                        "Keep it concise and actionable.",
+                        "Keep it concise and actionable. "
+                        "You must also categorize the article into one of the predefined categories.",
                     ),
                     (
                         "human",
-                        "Create a TLDR summary for this article:\n\nTitle: {title}\nContent: {content}\n\n{format_instructions}",
+                        "Create a TLDR summary for this article:\n\nTitle: {title}\nContent: {content}\n\n"
+                        "Available categories:\n{category_choices}\n\n"
+                        "Choose the most appropriate category for this article.\n\n"
+                        "{format_instructions}",
                     ),
                 ]
             )
@@ -315,6 +320,7 @@ class TLDRSummarizer:
                 {
                     "title": article.get("title", "Unknown Title"),
                     "content": article.get("content", article.get("summary", "No content available")),
+                    "category_choices": get_category_choices(),
                     "format_instructions": self.article_parser.get_format_instructions(),
                 }
             )
@@ -323,11 +329,11 @@ class TLDRSummarizer:
             return TLDRSummary(
                 tldr_text=result.tldr,
                 key_points=result.key_facts,
-                trending_topics=[article.get("category", "AI/ML")],
+                trending_topics=[result.category],  # Use LLM-generated category
                 impact_level="Medium",  # Default for single articles
                 reading_time=result.reading_time,
                 article_count=1,
-                categories=[article.get("category", "Unknown")],
+                categories=[result.category],  # Use LLM-generated category
                 sources=[article.get("source", "Unknown")],
                 generated_at=datetime.now().isoformat(),
                 model_used=self.model_name,
@@ -348,6 +354,7 @@ class TLDRSummarizer:
                         {
                             "title": article.get("title", "Unknown Title"),
                             "content": article.get("content", article.get("summary", "No content available")),
+                            "category_choices": get_category_choices(),
                             "format_instructions": self.article_parser.get_format_instructions(),
                         }
                     )
@@ -356,11 +363,11 @@ class TLDRSummarizer:
                     return TLDRSummary(
                         tldr_text=result.tldr,
                         key_points=result.key_facts,
-                        trending_topics=[article.get("category", "AI/ML")],
+                        trending_topics=[result.category],  # Use LLM-generated category
                         impact_level="Medium",  # Default for single articles
                         reading_time=result.reading_time,
                         article_count=1,
-                        categories=[article.get("category", "Unknown")],
+                        categories=[result.category],  # Use LLM-generated category
                         sources=[article.get("source", "Unknown")],
                         generated_at=datetime.now().isoformat(),
                         model_used=f"{self.llm_provider}_fallback",

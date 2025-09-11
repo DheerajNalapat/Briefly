@@ -1,9 +1,9 @@
 """
-Summarizer Service for Briefly Bot
+Content Processing Service for Briefly Bot
 
-This service provides a unified interface for creating TLDR summaries using
-different LLM providers and output formats. It handles summarization strategy
-selection, content processing, and result formatting.
+This service provides a unified interface for content processing including
+TLDR summarization, intelligent reranking, and content optimization.
+It handles summarization strategy selection, content processing, and result formatting.
 """
 
 import logging
@@ -12,35 +12,45 @@ from datetime import datetime
 
 from slackbot.summarizer.tldr_summarizer import create_tldr_summarizer, TLDRSummarizer
 from slackbot.summarizer.models import DailyDigestTLDR, ArticleTLDR
+from slackbot.utils.reranker import ArticleReranker, RankingConfig, create_article_reranker
 
 
 logger = logging.getLogger(__name__)
 
 
-class SummarizerService:
+class ContentProcessingService:
     """
-    High-level service for creating TLDR summaries.
+    High-level service for content processing including TLDR summarization and intelligent reranking.
 
-    This service provides a unified interface for summarizing content using
-    different LLM providers and output formats.
+    This service provides a unified interface for content processing using
+    different LLM providers, output formats, and ranking strategies.
     """
 
-    def __init__(self, llm_provider: str = "openai", api_key: Optional[str] = None, model_name: Optional[str] = None):
+    def __init__(
+        self,
+        llm_provider: str = "openai",
+        api_key: Optional[str] = None,
+        model_name: Optional[str] = None,
+        ranking_config: Optional[RankingConfig] = None,
+    ):
         """
-        Initialize the summarizer service.
+        Initialize the content processing service.
 
         Args:
             llm_provider: LLM provider to use ('openai', 'gemini', 'auto')
             api_key: API key for the LLM provider
             model_name: Specific model name to use
+            ranking_config: Configuration for article ranking
         """
         self.llm_provider = llm_provider
         self.api_key = api_key
         self.model_name = model_name
         self.summarizer: Optional[TLDRSummarizer] = None
+        self.reranker: Optional[ArticleReranker] = None
 
-        logger.info(f"Initializing SummarizerService with provider: {llm_provider}")
+        logger.info(f"Initializing ContentProcessingService with provider: {llm_provider}")
         self._initialize_summarizer()
+        self._initialize_reranker(ranking_config)
 
     def _initialize_summarizer(self) -> None:
         """Initialize the TLDR summarizer."""
@@ -58,14 +68,32 @@ class SummarizerService:
             logger.error(f"❌ Failed to initialize summarizer: {e}")
             self.summarizer = None
 
+    def _initialize_reranker(self, ranking_config: Optional[RankingConfig] = None) -> None:
+        """Initialize the article reranker."""
+        try:
+            self.reranker = create_article_reranker(ranking_config)
+            logger.info("✅ Article reranker initialized successfully")
+        except Exception as e:
+            logger.error(f"❌ Failed to initialize reranker: {e}")
+            self.reranker = None
+
     def is_available(self) -> bool:
         """
-        Check if the summarizer service is available.
+        Check if the content processing service is available.
 
         Returns:
             True if available, False otherwise
         """
         return self.summarizer is not None and self.summarizer.is_available()
+
+    def is_reranker_available(self) -> bool:
+        """
+        Check if the reranker is available.
+
+        Returns:
+            True if available, False otherwise
+        """
+        return self.reranker is not None
 
     def get_provider_info(self) -> Dict[str, Any]:
         """
@@ -240,13 +268,86 @@ class SummarizerService:
             Dictionary with summarizer service summary
         """
         return {
-            "service": "SummarizerService",
+            "service": "ContentProcessingService",
             "timestamp": datetime.now().isoformat(),
             "provider_info": self.get_provider_info(),
             "available": self.is_available(),
+            "reranker_available": self.is_reranker_available(),
             "llm_provider": self.llm_provider,
             "model_name": self.model_name,
         }
+
+    def rerank_articles(self, articles: List[Dict[str, Any]], strategy: str = "smart") -> List[Dict[str, Any]]:
+        """
+        Rerank articles using the integrated reranker.
+
+        Args:
+            articles: List of article dictionaries
+            strategy: Ranking strategy ('smart', 'source_priority', 'recency', 'custom')
+
+        Returns:
+            Reranked list of articles
+        """
+        if not self.is_reranker_available():
+            logger.warning("⚠️ Reranker not available, returning original order")
+            return articles
+
+        if not articles:
+            logger.warning("⚠️ No articles provided for reranking")
+            return articles
+
+        try:
+            logger.info(f"🔄 Reranking {len(articles)} articles using strategy: {strategy}")
+            reranked = self.reranker.rerank_articles(articles, strategy=strategy)
+
+            # Log ranking summary
+            if reranked:
+                summary = self.reranker.get_ranking_summary(reranked)
+                logger.info(f"📊 Reranking complete. Top source: {reranked[0].get('source_type', 'unknown')}")
+
+                # Log source distribution
+                source_dist = summary.get("source_distribution", {})
+                for source_type, count in source_dist.items():
+                    logger.info(f"  {source_type}: {count} articles")
+
+            return reranked
+
+        except Exception as e:
+            logger.error(f"❌ Error during reranking: {e}")
+            return articles
+
+    def process_and_rank_articles(
+        self, articles: List[Dict[str, Any]], ranking_strategy: str = "smart", **kwargs
+    ) -> List[Dict[str, Any]]:
+        """
+        Process articles with both reranking and summarization.
+
+        Args:
+            articles: List of article dictionaries
+            ranking_strategy: Strategy for reranking
+            **kwargs: Additional arguments for summarization
+
+        Returns:
+            Processed and ranked articles
+        """
+        if not articles:
+            return []
+
+        logger.info(f"🎯 Processing and ranking {len(articles)} articles")
+
+        # Step 1: Rerank articles
+        ranked_articles = self.rerank_articles(articles, strategy=ranking_strategy)
+
+        # Step 2: Create summaries (if requested)
+        if kwargs.get("create_summaries", True):
+            summaries = self.batch_summarize_articles(ranked_articles, **kwargs)
+
+            # Merge summaries back with articles
+            for i, summary in enumerate(summaries):
+                if summary and i < len(ranked_articles):
+                    ranked_articles[i]["tldr_summary"] = summary
+
+        return ranked_articles
 
     def switch_provider(
         self, new_provider: str, new_api_key: Optional[str] = None, new_model_name: Optional[str] = None
@@ -286,9 +387,9 @@ class SummarizerService:
 
     def is_healthy(self) -> bool:
         """
-        Check if the summarizer service is healthy.
+        Check if the content processing service is healthy.
 
         Returns:
             True if healthy, False otherwise
         """
-        return self.is_available()
+        return self.is_available() and self.is_reranker_available()

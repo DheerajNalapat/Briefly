@@ -14,6 +14,7 @@ from pathlib import Path
 from slackbot.collectors.base_collector import BaseCollector, CollectorManager
 from slackbot.collectors.arxiv_collector import create_arxiv_collector
 from slackbot.collectors.newsapi_org_collector import create_newsapi_collector
+from slackbot.collectors.rss_collector import create_rss_collector
 
 
 logger = logging.getLogger(__name__)
@@ -59,6 +60,14 @@ class AggregationService:
                 logger.info("✅ NewsAPI collector initialized successfully")
             else:
                 logger.warning("⚠️ NewsAPI collector not available")
+
+            # Initialize RSS collector
+            rss_collector = create_rss_collector()
+            if rss_collector.is_available():
+                self.collectors["rss"] = rss_collector
+                logger.info("✅ RSS collector initialized successfully")
+            else:
+                logger.warning("⚠️ RSS collector not available")
 
             # Initialize collector manager for future extensibility
             self.collector_manager = CollectorManager()
@@ -185,34 +194,136 @@ class AggregationService:
             return []
 
         # Calculate articles per source
-        articles_per_source = max_articles // len(available_sources)
-        remaining_articles = max_articles % len(available_sources)
+        if max_articles is None:
+            # No limit - collect all available articles
+            articles_per_source = None
+        else:
+            articles_per_source = max_articles // len(available_sources)
+        if max_articles is not None:
+            remaining_articles = max_articles % len(available_sources)
+        else:
+            remaining_articles = 0
 
         balanced_articles = []
 
         for i, source_name in enumerate(available_sources):
             try:
-                # Add extra articles to first few sources if there are remaining
-                source_limit = articles_per_source + (1 if i < remaining_articles else 0)
+                if articles_per_source is None:
+                    # No limit - collect all available articles
+                    source_limit = None
+                else:
+                    # Add extra articles to first few sources if there are remaining
+                    source_limit = articles_per_source + (1 if i < remaining_articles else 0)
 
                 source_kwargs = kwargs.copy()
                 source_kwargs["max_articles"] = source_limit
 
                 articles = self.collect_from_source(source_name, **source_kwargs)
-                balanced_articles.extend(articles[:source_limit])
 
-                logger.info(f"📊 {source_name}: collected {len(articles[:source_limit])} articles")
+                if source_limit is not None:
+                    balanced_articles.extend(articles[:source_limit])
+                    logger.info(f"📊 {source_name}: collected {len(articles[:source_limit])} articles")
+                else:
+                    balanced_articles.extend(articles)
+                    logger.info(f"📊 {source_name}: collected {len(articles)} articles")
 
             except Exception as e:
                 logger.error(f"❌ Failed to collect from {source_name}: {e}")
                 continue
 
-        # Ensure we don't exceed max_articles
-        final_articles = balanced_articles[:max_articles]
+        # Ensure we don't exceed max_articles if specified
+        if max_articles is not None:
+            final_articles = balanced_articles[:max_articles]
+        else:
+            final_articles = balanced_articles
 
         logger.info(
             f"✅ Balanced collection complete: {len(final_articles)} articles from {len(available_sources)} sources"
         )
+        return final_articles
+
+    def collect_prioritized(self, max_articles: int = 20, **kwargs) -> List[Dict[str, Any]]:
+        """
+        Collect news with prioritized source ordering: NewsAPI first, then limited RSS, then max 3 ArXiv.
+
+        Args:
+            max_articles: Maximum total articles to collect
+            **kwargs: Additional arguments for collection
+
+        Returns:
+            List of collected news items with prioritized representation
+        """
+        logger.info(f"🎯 Collecting {max_articles} articles with prioritized sources (NewsAPI → RSS → ArXiv)")
+
+        available_sources = self.get_available_collectors()
+        if not available_sources:
+            logger.warning("⚠️ No collectors available")
+            return []
+
+        prioritized_articles = []
+        remaining_articles = max_articles
+
+        # Priority 1: NewsAPI articles (get most of the articles)
+        if "newsapi" in available_sources and remaining_articles > 0:
+            try:
+                # Allocate 70% of articles to NewsAPI, but at least 5
+                newsapi_limit = max(5, int(remaining_articles * 0.7))
+                newsapi_kwargs = kwargs.copy()
+                newsapi_kwargs["max_articles"] = newsapi_limit
+                newsapi_kwargs["force"] = True  # Force collection even if not due for update
+
+                # Clear cache before collecting to ensure fresh articles
+                newsapi_collector = self.collectors["newsapi"]
+                if hasattr(newsapi_collector, "articles_cache"):
+                    newsapi_collector.articles_cache.clear()
+                    logger.info("🧹 Cleared NewsAPI cache for fresh collection")
+
+                newsapi_articles = self.collect_from_source("newsapi", **newsapi_kwargs)
+                prioritized_articles.extend(newsapi_articles)
+                remaining_articles -= len(newsapi_articles)
+                logger.info(f"📊 newsapi: collected {len(newsapi_articles)} articles (remaining: {remaining_articles})")
+
+            except Exception as e:
+                logger.error(f"❌ Failed to collect from newsapi: {e}")
+
+        # Priority 2: RSS articles (limited to remaining space)
+        if "rss" in available_sources and remaining_articles > 0:
+            try:
+                # Allocate remaining articles to RSS, but cap at 5
+                rss_limit = min(5, remaining_articles)
+                rss_kwargs = kwargs.copy()
+                rss_kwargs["max_articles"] = rss_limit
+                rss_kwargs["force"] = True  # Force collection even if not due for update
+
+                rss_articles = self.collect_from_source("rss", **rss_kwargs)
+                prioritized_articles.extend(rss_articles)
+                remaining_articles -= len(rss_articles)
+                logger.info(f"📊 rss: collected {len(rss_articles)} articles (remaining: {remaining_articles})")
+
+            except Exception as e:
+                logger.error(f"❌ Failed to collect from rss: {e}")
+
+        # Priority 3: ArXiv papers (maximum 3)
+        if "arxiv" in available_sources and remaining_articles > 0:
+            try:
+                # Cap ArXiv at 3 articles maximum
+                arxiv_limit = min(3, remaining_articles)
+                arxiv_kwargs = kwargs.copy()
+                arxiv_kwargs["max_articles"] = arxiv_limit
+                arxiv_kwargs["force"] = True  # Force collection even if not due for update
+
+                arxiv_articles = self.collect_from_source("arxiv", **arxiv_kwargs)
+                prioritized_articles.extend(arxiv_articles)
+                remaining_articles -= len(arxiv_articles)
+                logger.info(f"📊 arxiv: collected {len(arxiv_articles)} articles (remaining: {remaining_articles})")
+
+            except Exception as e:
+                logger.error(f"❌ Failed to collect from arxiv: {e}")
+
+        # Ensure we don't exceed max_articles
+        final_articles = prioritized_articles[:max_articles]
+
+        logger.info(f"✅ Prioritized collection complete: {len(final_articles)} articles (NewsAPI → RSS → ArXiv)")
         return final_articles
 
     def get_collection_summary(self) -> Dict[str, Any]:

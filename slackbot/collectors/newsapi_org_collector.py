@@ -9,10 +9,10 @@ Specialized for general news content and current events.
 import os
 import logging
 import hashlib
-import time
 from datetime import datetime
 from typing import Dict, List, Optional, Any
 from dataclasses import dataclass, asdict
+from enum import Enum
 
 # Third-party imports
 try:
@@ -27,6 +27,96 @@ except ImportError:
 from .base_collector import BaseCollector
 
 logger = logging.getLogger(__name__)
+
+
+class Category(Enum):
+    """News categories for structured querying."""
+
+    TECHNICAL = "technical"
+    INDUSTRY = "industry"
+    APPLICATIONS = "applications"
+    ECONOMIC = "economic"
+    INFRASTRUCTURE = "infrastructure"
+
+
+# Comprehensive query parameters for different news categories
+NEWS_QUERY_PARAMS = {
+    Category.TECHNICAL: {
+        "query": "AI model breakthrough OR AI research advancement OR language model improvement",
+        "keywords": [
+            "gpt",
+            "claude",
+            "gemini",
+            "model",
+            "breakthrough",
+            "research",
+            "capability",
+            "advancement",
+            "algorithm",
+            "neural",
+            "training",
+        ],
+    },
+    Category.INDUSTRY: {
+        "query": "AI business news OR AI company announcement OR AI industry update",
+        "keywords": [
+            "partnership",
+            "launch",
+            "market",
+            "business",
+            "company",
+            "startup",
+            "funding",
+            "investment",
+            "acquisition",
+            "strategy",
+            "growth",
+        ],
+    },
+    Category.APPLICATIONS: {
+        "query": "AI implementation success OR AI use case OR AI solution deployment",
+        "keywords": [
+            "implementation",
+            "solution",
+            "use case",
+            "deployment",
+            "automation",
+            "industry",
+            "transform",
+            "adopt",
+            "integrate",
+        ],
+    },
+    Category.ECONOMIC: {
+        "query": "AI economic impact OR AI job market OR AI workforce changes",
+        "keywords": [
+            "job",
+            "workforce",
+            "employment",
+            "productivity",
+            "efficiency",
+            "labor",
+            "skill",
+            "training",
+            "economy",
+            "market",
+        ],
+    },
+    Category.INFRASTRUCTURE: {
+        "query": "AI chip development OR AI hardware OR AI infrastructure news",
+        "keywords": [
+            "chip",
+            "nvidia",
+            "semiconductor",
+            "hardware",
+            "compute",
+            "data center",
+            "server",
+            "gpu",
+            "processor",
+        ],
+    },
+}
 
 
 @dataclass
@@ -123,44 +213,24 @@ class NewsAPICollector(BaseCollector):
         return DEPENDENCIES_AVAILABLE and self.newsapi_client
 
     def load_default_sources(self):
-        """Load default NewsAPI sources."""
-        default_sources = [
-            NewsAPISource(
-                name="Tech News AI",
-                query="artificial intelligence OR AI",
-                category="technology",
-                language="en",
-                country="us",
-                max_items=15,
-            ),
-            NewsAPISource(
-                name="Business AI News",
-                query="AI",
-                category="business",
+        """Load default NewsAPI sources using the comprehensive query params."""
+        default_sources = []
+
+        # Create sources based on NEWS_QUERY_PARAMS
+        for category, params in NEWS_QUERY_PARAMS.items():
+            source = NewsAPISource(
+                name=f"{category.value.title()} AI News",
+                query=params["query"],
+                category=None,  # Use get_everything for all categories like POC
                 language="en",
                 country="us",
                 max_items=10,
-            ),
-            NewsAPISource(
-                name="Science AI News",
-                query="AI",
-                category="science",
-                language="en",
-                country="us",
-                max_items=10,
-            ),
-            NewsAPISource(
-                name="Health AI News",
-                query="AI",
-                category="health",
-                language="en",
-                country="us",
-                max_items=10,
-            ),
-        ]
+                enabled=True,
+            )
+            default_sources.append(source)
 
         self.sources = default_sources
-        logger.info(f"Loaded {len(default_sources)} NewsAPI sources")
+        logger.info(f"Loaded {len(default_sources)} NewsAPI sources with comprehensive query params")
 
     def should_update_source(self, source: NewsAPISource) -> bool:
         """Check if a source should be updated based on its interval."""
@@ -208,23 +278,12 @@ class NewsAPICollector(BaseCollector):
 
             logger.info(f"NewsAPI params for {source.name}: {params}")
 
-            # Try get_top_headlines first, then fallback to get_everything if no results
-            if source.category:
-                response = self.newsapi_client.get_top_headlines(**params)
-
-                # If no results with category, try without category using get_everything
-                if response.get("status") == "ok" and response.get("totalResults", 0) == 0:
-                    logger.info(f"No results with category for {source.name}, trying broader search...")
-                    # Remove category and country (not supported by get_everything) and try get_everything
-                    params_without_category = params.copy()
-                    params_without_category.pop("category", None)
-                    params_without_category.pop("country", None)  # country is not supported by get_everything
-                    response = self.newsapi_client.get_everything(**params_without_category, sort_by="publishedAt")
-            else:
-                # For get_everything, remove country parameter as it's not supported
-                params_for_everything = params.copy()
-                params_for_everything.pop("country", None)  # country is not supported by get_everything
-                response = self.newsapi_client.get_everything(**params_for_everything, sort_by="publishedAt")
+            # Use get_everything for all categories like the POC approach
+            # Remove country parameter as it's not supported by get_everything
+            params_for_everything = params.copy()
+            params_for_everything.pop("country", None)  # country is not supported by get_everything
+            params_for_everything.pop("category", None)  # Remove category as we use custom queries
+            response = self.newsapi_client.get_everything(**params_for_everything, sort_by="publishedAt")
 
             # Log response status for debugging
             logger.info(
@@ -336,6 +395,106 @@ class NewsAPICollector(BaseCollector):
                 logger.info(f"Disabled NewsAPI source: {name}")
                 break
 
+    def fetch_news_by_categories(
+        self, query_params: Dict[Category, Dict] = None, max_articles_per_category: int = 5
+    ) -> List[Dict[str, Any]]:
+        """Fetch news for all categories defined in query_params."""
+        if query_params is None:
+            query_params = NEWS_QUERY_PARAMS
+
+        logger.info("=== Fetching News by Categories ===")
+
+        # Clear cache to avoid deduplication issues with categorized fetching
+        original_cache_size = len(self.articles_cache)
+        self.articles_cache.clear()
+        logger.info(f"Cleared cache (was {original_cache_size} items) for categorized fetching")
+
+        all_articles = []
+        total_articles = 0
+
+        for category, params in query_params.items():
+            logger.info(f"--- Fetching {category.value.upper()} News ---")
+            logger.info(f"Query: {params['query']}")
+            logger.info(f"Keywords: {', '.join(params['keywords'][:5])}...")  # Show first 5 keywords
+
+            # Create a temporary source for this category
+            temp_source = NewsAPISource(
+                name=f"{category.value}_news",
+                query=params["query"],
+                category=None,  # Use get_everything like POC
+                max_items=max_articles_per_category,
+                enabled=True,
+            )
+
+            # Fetch articles for this category
+            articles = self.fetch_articles(temp_source)
+
+            # Add category information to each article
+            for article in articles:
+                article_dict = article.to_dict()
+                article_dict["category"] = category.value
+                article_dict["keywords"] = params["keywords"]
+                article_dict["collector"] = self.name
+                article_dict["collected_at"] = datetime.now().isoformat()
+                article_dict["source_type"] = "newsapi"
+                all_articles.append(article_dict)
+
+            total_articles += len(articles)
+            logger.info(f"Found {len(articles)} articles for {category.value}")
+
+        logger.info(f"=== Summary ===")
+        logger.info(f"Total articles collected: {total_articles}")
+        return all_articles
+
+    def fetch_news_by_single_category(
+        self, category: Category, query_params: Dict[Category, Dict] = None, max_articles: int = 10
+    ) -> List[Dict[str, Any]]:
+        """Fetch news for a single category."""
+        if query_params is None:
+            query_params = NEWS_QUERY_PARAMS
+
+        if category not in query_params:
+            logger.warning(f"Category {category.value} not found in query_params")
+            return []
+
+        params = query_params[category]
+        logger.info(f"=== Fetching {category.value.upper()} News ===")
+        logger.info(f"Query: {params['query']}")
+
+        # Clear cache to avoid deduplication issues with single category fetching
+        original_cache_size = len(self.articles_cache)
+        self.articles_cache.clear()
+        logger.info(f"Cleared cache (was {original_cache_size} items) for single category fetching")
+
+        # Create a temporary source for this category
+        temp_source = NewsAPISource(
+            name=f"{category.value}_news",
+            query=params["query"],
+            category=None,  # Use get_everything like POC
+            max_items=max_articles,
+            enabled=True,
+        )
+
+        articles = self.fetch_articles(temp_source)
+        all_articles = []
+
+        # Add category information to each article
+        for article in articles:
+            article_dict = article.to_dict()
+            article_dict["category"] = category.value
+            article_dict["keywords"] = params["keywords"]
+            article_dict["collector"] = self.name
+            article_dict["collected_at"] = datetime.now().isoformat()
+            article_dict["source_type"] = "newsapi"
+            all_articles.append(article_dict)
+
+        if all_articles:
+            logger.info(f"Found {len(all_articles)} articles for {category.value}")
+        else:
+            logger.info(f"No articles found for {category.value}")
+
+        return all_articles
+
     def cleanup_cache(self):
         """Clean up old items from cache to prevent memory issues."""
         # Keep only the last 1000 items
@@ -353,8 +512,6 @@ def create_newsapi_collector(name: str = "NewsAPI Collector") -> NewsAPICollecto
 
 if __name__ == "__main__":
     # Test the NewsAPI collector
-    import logging
-
     # Set up logging
     logging.basicConfig(level=logging.INFO)
 
@@ -364,19 +521,38 @@ if __name__ == "__main__":
     if collector.is_available():
         print("✅ NewsAPI Collector initialized successfully")
 
-        # Test collection
-        print("\n📊 Testing NewsAPI collection...")
+        # Test traditional collection
+        print("\n📊 Testing traditional NewsAPI collection...")
         results = collector.collect()
 
         print(f"✅ Collected {len(results)} articles")
 
+        # Test categorized collection
+        print("\n📊 Testing categorized NewsAPI collection...")
+        categorized_results = collector.fetch_news_by_categories(max_articles_per_category=3)
+        print(f"✅ Collected {len(categorized_results)} categorized articles")
+
+        # Test single category collection
+        print("\n📊 Testing single category collection...")
+        technical_results = collector.fetch_news_by_single_category(Category.TECHNICAL, max_articles=5)
+        print(f"✅ Collected {len(technical_results)} technical articles")
+
         # Show sample items
         if results:
-            print("\n📰 Sample articles:")
+            print("\n📰 Sample articles (traditional):")
             for i, item in enumerate(results[:3], 1):
                 print(f"  {i}. {item['title'][:60]}...")
                 print(f"     Source: {item['source']}")
                 print(f"     Category: {item['category']}")
+                print()
+
+        if categorized_results:
+            print("\n📰 Sample categorized articles:")
+            for i, item in enumerate(categorized_results[:3], 1):
+                print(f"  {i}. {item['title'][:60]}...")
+                print(f"     Source: {item['source']}")
+                print(f"     Category: {item['category']}")
+                print(f"     Keywords: {', '.join(item.get('keywords', [])[:3])}...")
                 print()
 
         # Show source status

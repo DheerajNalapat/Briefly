@@ -25,7 +25,7 @@ project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
 # Import Briefly Bot services
-from slackbot.services import AggregationService, SummarizerService, PublisherService
+from slackbot.services import AggregationService, ContentProcessingService, PublisherService
 from slackbot.summarizer.models import SlackMessage
 
 
@@ -66,8 +66,8 @@ def collect_news(aggregation_service: AggregationService, max_articles: int = 20
     try:
         logger.info("🔍 Starting news collection...")
 
-        # Use the service to collect news with balanced sources
-        articles = aggregation_service.collect_balanced(max_articles=max_articles, balance_sources=True)
+        # Use the service to collect news with prioritized sources (NewsAPI → RSS → ArXiv)
+        articles = aggregation_service.collect_prioritized(max_articles=max_articles)
 
         if not articles:
             logger.warning("⚠️ No articles collected")
@@ -89,13 +89,13 @@ def collect_news(aggregation_service: AggregationService, max_articles: int = 20
 
 
 def create_tldr_summaries(
-    summarizer_service: SummarizerService, articles: List[Dict[str, Any]]
+    content_processing_service: ContentProcessingService, articles: List[Dict[str, Any]]
 ) -> List[Dict[str, Any]]:
     """
-    Create TLDR summaries using the SummarizerService.
+    Create TLDR summaries using the ContentProcessingService.
 
     Args:
-        summarizer_service: Summarizer service instance
+        content_processing_service: Content processing service instance
         articles: List of news articles
 
     Returns:
@@ -106,12 +106,16 @@ def create_tldr_summaries(
     try:
         logger.info("🧠 Starting TLDR summarization...")
 
-        if not summarizer_service.is_available():
-            logger.error("❌ Summarizer service not available")
+        if not content_processing_service.is_available():
+            logger.error("❌ Content processing service not available")
             return []
 
-        # Use the service to create summaries with individual strategy
-        summaries = summarizer_service.summarize_with_strategy(articles=articles, strategy="individual")
+        # Use the service to process and rank articles, then create summaries
+        # First rerank articles to prioritize NewsAPI over ArXiv
+        ranked_articles = content_processing_service.rerank_articles(articles, strategy="smart")
+
+        # Create summaries with individual strategy
+        summaries = content_processing_service.summarize_with_strategy(articles=ranked_articles, strategy="individual")
 
         if not summaries:
             logger.warning("⚠️ No summaries created")
@@ -131,7 +135,9 @@ def create_tldr_summaries(
                 summary_dict = {
                     "title": original_article.get("title", "Unknown"),
                     "source": original_article.get("source", "Unknown"),
-                    "category": original_article.get("category", "Unknown"),
+                    "category": (
+                        summary.categories[0] if summary.categories else "Unknown"
+                    ),  # Use LLM-generated category
                     "url": original_article.get("url", ""),
                     "tldr": summary.tldr_text,
                     "key_points": summary.key_points,
@@ -187,13 +193,15 @@ def create_slack_message(summaries: List[Dict[str, Any]]) -> SlackMessage:
             title = summary.get("title", "Unknown Title")
             tldr_text = summary.get("tldr", "No summary available")
             url = summary.get("url", "#")
+            source = summary.get("source", "Unknown Source")
+            category = summary.get("category", "Unknown Category")
 
             blocks.append(
                 {
                     "type": "section",
                     "text": {
                         "type": "mrkdwn",
-                        "text": f"*{i}. {title}*\n{tldr_text}\n<{url}|Read more>",
+                        "text": f"*{i}. {title}*\n{tldr_text}\n\n📰 *Source:* {source} | 🏷️ *Category:* {category}\n<{url}|Read more>",
                     },
                 }
             )
@@ -298,9 +306,9 @@ def run_briefly_bot(
             logger.error("❌ Failed to initialize AggregationService")
             return False
 
-        summarizer_service = SummarizerService(llm_provider=llm_provider)
-        if not summarizer_service.is_healthy():
-            logger.error(f"❌ Failed to initialize SummarizerService with {llm_provider}")
+        content_processing_service = ContentProcessingService(llm_provider=llm_provider)
+        if not content_processing_service.is_healthy():
+            logger.error(f"❌ Failed to initialize ContentProcessingService with {llm_provider}")
             return False
 
         publisher_service = PublisherService(default_platform="slack")
@@ -326,7 +334,7 @@ def run_briefly_bot(
         logger.info("\n🧠 Step 3: Creating TLDR Summaries")
         logger.info("-" * 40)
 
-        summaries = create_tldr_summaries(summarizer_service, articles)
+        summaries = create_tldr_summaries(content_processing_service, articles)
         if not summaries:
             logger.error("❌ No summaries created - stopping")
             return False

@@ -391,8 +391,8 @@ def main():
     logger.info("Starting RSS News Aggregator...")
 
     # You can specify a config file here
-    # aggregator = RSSNewsAggregator("rss_sources_config.yaml")
-    aggregator = RSSNewsAggregator()
+    aggregator = RSSNewsAggregator("rss_sources_config.yaml")
+    # aggregator = RSSNewsAggregator()
 
     try:
         # List current RSS sources

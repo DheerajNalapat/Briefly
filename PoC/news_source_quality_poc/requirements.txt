@@ -1,0 +1,5 @@
+feedparser==6.0.10
+requests==2.31.0
+python-dotenv==1.0.0
+html2text==2020.1.16
+newsapi-python==0.2.7
