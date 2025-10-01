@@ -19,9 +19,9 @@ class RankingConfig:
     """Configuration for article ranking."""
 
     # Source type weights (higher = more priority)
-    newsapi_weight: float = 1.0  # Highest priority for NewsAPI
-    rss_weight: float = 0.8  # Medium priority for RSS
-    arxiv_weight: float = 0.6  # Lower priority for ArXiv (max 3 articles)
+    newsapi_weight: float = 0.9  # Highest priority for NewsAPI
+    rss_weight: float = 0.4  # Medium priority for RSS
+    arxiv_weight: float = 0.5  # Lower priority for ArXiv (max 3 articles)
 
     # Recency weights
     recency_weight: float = 0.3
