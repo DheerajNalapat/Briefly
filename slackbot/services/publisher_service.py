@@ -35,7 +35,7 @@ class PublisherService:
         self.default_platform = default_platform
         self.publishers: Dict[str, Any] = {}
 
-        logger.info(f"Initializing PublisherService with default platform: {default_platform}")
+        logger.info("Initializing PublisherService with default platform: %s", default_platform)
         self._initialize_publishers()
 
     def _initialize_publishers(self) -> None:
@@ -49,10 +49,10 @@ class PublisherService:
             else:
                 logger.warning("⚠️ Slack publisher not available")
 
-            logger.info(f"📤 PublisherService initialized with {len(self.publishers)} publishers")
+            logger.info("📤 PublisherService initialized with %s publishers", len(self.publishers))
 
         except Exception as e:
-            logger.error(f"❌ Failed to initialize publishers: {e}")
+            logger.error("❌ Failed to initialize publishers: %s", e)
             raise
 
     def get_available_platforms(self) -> List[str]:
@@ -118,7 +118,7 @@ class PublisherService:
                 "timestamp": datetime.now().isoformat(),
             }
 
-        logger.info(f"📤 Publishing message to {platform}")
+        logger.info("📤 Publishing message to %s", platform)
 
         try:
             # Handle different message formats
@@ -133,14 +133,14 @@ class PublisherService:
                 }
 
             if result.get("success"):
-                logger.info(f"✅ Message published successfully to {platform}")
+                logger.info("✅ Message published successfully to %s", platform)
             else:
-                logger.error(f"❌ Failed to publish to {platform}: {result.get('error')}")
+                logger.error("❌ Failed to publish to %s: %s", platform, result.get("error"))
 
             return result
 
         except Exception as e:
-            logger.error(f"❌ Error publishing to {platform}: {e}")
+            logger.error("❌ Error publishing to %s: %s", platform, e)
             return {"success": False, "error": str(e), "platform": platform, "timestamp": datetime.now().isoformat()}
 
     def _publish_to_slack(
@@ -148,7 +148,6 @@ class PublisherService:
         publisher: SlackPublisher,
         message: Union[str, Dict[str, Any], SlackMessage],
         channel: Optional[str] = None,
-        **kwargs,
     ) -> Dict[str, Any]:
         """
         Publish a message to Slack.
@@ -195,33 +194,6 @@ class PublisherService:
         except Exception as e:
             return {"success": False, "error": str(e), "platform": "slack", "timestamp": datetime.now().isoformat()}
 
-    def publish_tldr_digest(
-        self, digest_data: Dict[str, Any], platform: Optional[str] = None, channel: Optional[str] = None, **kwargs
-    ) -> Dict[str, Any]:
-        """
-        Publish a TLDR digest to the specified platform.
-
-        Args:
-            digest_data: TLDR digest data
-            platform: Platform to publish to
-            channel: Channel/recipient for the message
-            **kwargs: Additional arguments
-
-        Returns:
-            Dictionary with publishing results
-        """
-        logger.info(f"📊 Publishing TLDR digest to {platform or self.default_platform}")
-
-        # Convert digest data to appropriate message format
-        if platform == "slack" or not platform:
-            # For Slack, we expect the digest to already be formatted
-            message = digest_data
-        else:
-            # For other platforms, we might need to format differently
-            message = self._format_message_for_platform(digest_data, platform)
-
-        return self.publish_message(message, platform, channel, **kwargs)
-
     def _format_message_for_platform(self, content: Dict[str, Any], platform: str) -> Union[str, Dict[str, Any]]:
         """
         Format message content for a specific platform.
@@ -235,6 +207,7 @@ class PublisherService:
         """
         # This is a placeholder for future platform-specific formatting
         # For now, return the content as-is
+        logger.warning("⚠️ Formatting message for platform %s is not implemented", platform)
         return content
 
     def publish_batch(
@@ -256,22 +229,22 @@ class PublisherService:
         Returns:
             List of publishing results for each message
         """
-        logger.info(f"📦 Publishing batch of {len(messages)} messages to {platform or self.default_platform}")
+        logger.info("📦 Publishing batch of %s messages to %s", len(messages), platform or self.default_platform)
 
         results = []
         for i, message in enumerate(messages):
             try:
-                logger.info(f"  Publishing message {i+1}/{len(messages)}")
+                logger.info("  Publishing message %s/%s", i + 1, len(messages))
                 result = self.publish_message(message, platform, channel, **kwargs)
                 results.append(result)
 
                 if result.get("success"):
-                    logger.info(f"    ✅ Message {i+1} published successfully")
+                    logger.info("    ✅ Message %s published successfully", i + 1)
                 else:
-                    logger.error(f"    ❌ Message {i+1} failed: {result.get('error')}")
+                    logger.error("    ❌ Message %s failed: %s", i + 1, result.get("error"))
 
             except Exception as e:
-                logger.error(f"    ❌ Error publishing message {i+1}: {e}")
+                logger.error("    ❌ Error publishing message %s: %s", i + 1, e)
                 results.append(
                     {
                         "success": False,
@@ -282,7 +255,7 @@ class PublisherService:
                 )
 
         success_count = sum(1 for r in results if r.get("success"))
-        logger.info(f"✅ Batch publishing complete: {success_count}/{len(messages)} successful")
+        logger.info("✅ Batch publishing complete: %s/%s successful", success_count, len(messages))
 
         return results
 
@@ -370,10 +343,10 @@ class PublisherService:
             publisher: Publisher instance
         """
         if name in self.publishers:
-            logger.warning(f"⚠️ Publisher '{name}' already exists, replacing")
+            logger.warning("⚠️ Publisher '%s' already exists, replacing", name)
 
         self.publishers[name] = publisher
-        logger.info(f"✅ Added publisher '{name}' to PublisherService")
+        logger.info("✅ Added publisher '%s' to PublisherService", name)
 
     def remove_publisher(self, name: str) -> bool:
         """
@@ -387,6 +360,6 @@ class PublisherService:
         """
         if name in self.publishers:
             del self.publishers[name]
-            logger.info(f"✅ Removed publisher '{name}' from PublisherService")
+            logger.info("✅ Removed publisher '%s' from PublisherService", name)
             return True
         return False

@@ -6,7 +6,6 @@ This collector fetches research papers from ArXiv API.
 Specialized for academic and research content.
 """
 
-import os
 import logging
 import hashlib
 import time
@@ -109,7 +108,7 @@ class ArXivCollector(BaseCollector):
             self.arxiv_client = True  # Just mark as available
             logger.info("ArXiv client available")
         except Exception as e:
-            logger.error(f"Error initializing ArXiv client: {e}")
+            logger.error("Error initializing ArXiv client: %s", e)
 
     def is_available(self) -> bool:
         """Check if the collector is available and ready to use."""
@@ -153,7 +152,7 @@ class ArXivCollector(BaseCollector):
         ]
 
         self.sources = default_sources
-        logger.info(f"Loaded {len(default_sources)} ArXiv sources")
+        logger.info("Loaded %s ArXiv sources", len(default_sources))
 
     def should_update_source(self, source: ArXivSource) -> bool:
         """Check if a source should be updated based on its interval."""
@@ -216,14 +215,14 @@ class ArXivCollector(BaseCollector):
                 # Rate limiting
                 time.sleep(0.1)
 
-            logger.info(f"Fetched {len(papers)} papers from {source.name}")
+            logger.info("Fetched %s papers from %s", len(papers), source.name)
             return papers
 
         except Exception as e:
-            logger.error(f"Error fetching from ArXiv {source.name}: {e}")
+            logger.error("Error fetching from ArXiv %s: %s", source.name, e)
             # Return any papers we managed to collect before the error
             if "papers" in locals() and papers:
-                logger.info(f"Returning {len(papers)} papers collected before error from {source.name}")
+                logger.info("Returning %s papers collected before error from %s", len(papers), source.name)
                 return papers
             return []
 
@@ -236,7 +235,7 @@ class ArXivCollector(BaseCollector):
                 continue
 
             if not self.should_update_source(source) and not kwargs.get("force", False):
-                logger.debug(f"Skipping source {source.name} - not due for update")
+                logger.debug("Skipping source %s - not due for update", source.name)
                 continue
 
             try:
@@ -251,10 +250,10 @@ class ArXivCollector(BaseCollector):
                     all_papers.append(paper_dict)
 
             except Exception as e:
-                logger.error(f"Error collecting from source {source.name}: {e}")
+                logger.error("Error collecting from source %s: %s", source.name, e)
                 continue
 
-        logger.info(f"Collected {len(all_papers)} total papers from {self.name}")
+        logger.info("Collected %s total papers from %s", len(all_papers), self.name)
         return all_papers
 
     def get_source_status(self) -> List[Dict[str, Any]]:
@@ -264,19 +263,19 @@ class ArXivCollector(BaseCollector):
     def add_source(self, source: ArXivSource):
         """Add a new ArXiv source to the collector."""
         self.sources.append(source)
-        logger.info(f"Added ArXiv source: {source.name}")
+        logger.info("Added ArXiv source: %s", source.name)
 
     def remove_source(self, name: str):
         """Remove an ArXiv source by name."""
         self.sources = [s for s in self.sources if s.name != name]
-        logger.info(f"Removed ArXiv source: {name}")
+        logger.info("Removed ArXiv source: %s", name)
 
     def enable_source(self, name: str):
         """Enable an ArXiv source by name."""
         for source in self.sources:
             if source.name == name:
                 source.enabled = True
-                logger.info(f"Enabled ArXiv source: {name}")
+                logger.info("Enabled ArXiv source: %s", name)
                 break
 
     def disable_source(self, name: str):
@@ -284,7 +283,7 @@ class ArXivCollector(BaseCollector):
         for source in self.sources:
             if source.name == name:
                 source.enabled = False
-                logger.info(f"Disabled ArXiv source: {name}")
+                logger.info("Disabled ArXiv source: %s", name)
                 break
 
     def cleanup_cache(self):

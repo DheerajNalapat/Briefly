@@ -33,12 +33,16 @@ def setup_logging(verbose: bool = False) -> None:
     """Set up logging configuration."""
     log_level = logging.DEBUG if verbose else logging.INFO
 
+    # Create logs directory if it doesn't exist
+    logs_dir = Path("logs")
+    logs_dir.mkdir(exist_ok=True)
+
     logging.basicConfig(
         level=log_level,
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         handlers=[
             logging.StreamHandler(sys.stdout),
-            logging.FileHandler(f'briefly_bot_{datetime.now().strftime("%Y%m%d")}.log'),
+            logging.FileHandler(logs_dir / f'briefly_bot_{datetime.now().strftime("%Y%m%d")}.log'),
         ],
     )
 
@@ -73,18 +77,18 @@ def collect_news(aggregation_service: AggregationService, max_articles: int = 20
             logger.warning("⚠️ No articles collected")
             return []
 
-        logger.info(f"✅ Successfully collected {len(articles)} articles")
+        logger.info("✅ Successfully collected %s articles", len(articles))
 
         # Log sample articles
         for i, article in enumerate(articles[:3], 1):
-            logger.info(f"  {i}. {article.get('title', 'No title')[:60]}...")
-            logger.info(f"     Source: {article.get('source', 'Unknown')} ({article.get('source_type', 'unknown')})")
-            logger.info(f"     Category: {article.get('category', 'Unknown')}")
+            logger.info("  %s. %s...", i, article.get("title", "No title")[:60])
+            logger.info("     Source: %s (%s)", article.get("source", "Unknown"), article.get("source_type", "unknown"))
+            logger.info("     Category: %s", article.get("category", "Unknown"))
 
         return articles
 
     except Exception as e:
-        logger.error(f"❌ Error during news collection: {e}")
+        logger.error("❌ Error during news collection: %s", e)
         return []
 
 
@@ -125,12 +129,13 @@ def create_tldr_summaries(
         summary_dicts = []
         for i, summary in enumerate(summaries):
             if summary is None:
-                logger.warning(f"    ⚠️ Summary {i+1} is None, skipping")
+                logger.warning("    ⚠️ Summary %s is None, skipping", i + 1)
                 continue
 
             try:
-                # Get the original article data for metadata
-                original_article = articles[i] if i < len(articles) else {}
+                # Get the corresponding ranked article data for metadata
+                # Summaries are created from ranked_articles, so we need to use the same index
+                original_article = ranked_articles[i] if i < len(ranked_articles) else {}
 
                 summary_dict = {
                     "title": original_article.get("title", "Unknown"),
@@ -148,14 +153,14 @@ def create_tldr_summaries(
                 summary_dicts.append(summary_dict)
 
             except Exception as e:
-                logger.warning(f"    ⚠️ Error processing summary {i+1}: {e}")
+                logger.warning("    ⚠️ Error processing summary %s: %s", i + 1, e)
                 continue
 
-        logger.info(f"✅ Successfully created {len(summary_dicts)} TLDR summaries")
+        logger.info("✅ Successfully created %s TLDR summaries", len(summary_dicts))
         return summary_dicts
 
     except Exception as e:
-        logger.error(f"❌ Error during TLDR summarization: {e}")
+        logger.error("❌ Error during TLDR summarization: %s", e)
         return []
 
 
@@ -227,15 +232,15 @@ def create_slack_message(summaries: List[Dict[str, Any]]) -> SlackMessage:
             text=f"🚀 AI/ML News TLDR - {len(summaries)} articles summarized", blocks=blocks, attachments=[]
         )
 
-        logger.info(f"✅ Slack message created with {len(blocks)} blocks")
+        logger.info("✅ Slack message created with %s blocks", len(blocks))
         return message
 
     except Exception as e:
-        logger.error(f"❌ Error creating Slack message: {e}")
+        logger.error("❌ Error creating Slack message: %s", e)
         raise
 
 
-def publish_to_slack(
+def publish_to_channels(
     publisher_service: PublisherService, message: SlackMessage, channel: str, dry_run: bool = False
 ) -> bool:
     """
@@ -254,26 +259,26 @@ def publish_to_slack(
     try:
         if dry_run:
             logger.info("🔍 DRY RUN: Would publish to Slack")
-            logger.info(f"   Channel: {channel}")
-            logger.info(f"   Message blocks: {len(message.blocks)}")
+            logger.info("   Channel: %s", channel)
+            logger.info("   Message blocks: %s", len(message.blocks))
             return True
 
-        logger.info(f"📤 Publishing to Slack channel {channel}...")
+        logger.info("📤 Publishing to Slack channel %s...", channel)
 
         # Use the service to publish the message
         result = publisher_service.publish_message(message=message, platform="slack", channel=channel)
 
         if result.get("success"):
             logger.info("🎉 Successfully published to Slack!")
-            logger.info(f"📺 Channel: {channel}")
-            logger.info(f"🆔 Message ID: {result.get('message_id', 'Unknown')}")
+            logger.info("📺 Channel: %s", channel)
+            logger.info("🆔 Message ID: %s", result.get("message_id", "Unknown"))
             return True
         else:
-            logger.error(f"❌ Failed to publish: {result.get('error', 'Unknown error')}")
+            logger.error("❌ Failed to publish: %s", result.get("error", "Unknown error"))
             return False
 
     except Exception as e:
-        logger.error(f"❌ Error publishing to Slack: {e}")
+        logger.error("❌ Error publishing to Slack: %s", e)
         return False
 
 
@@ -308,7 +313,7 @@ def run_briefly_bot(
 
         content_processing_service = ContentProcessingService(llm_provider=llm_provider)
         if not content_processing_service.is_healthy():
-            logger.error(f"❌ Failed to initialize ContentProcessingService with {llm_provider}")
+            logger.error("❌ Failed to initialize ContentProcessingService with %s", llm_provider)
             return False
 
         publisher_service = PublisherService(default_platform="slack")
@@ -355,15 +360,15 @@ def run_briefly_bot(
             logger.error("❌ No Slack channel specified")
             return False
 
-        success = publish_to_slack(publisher_service, message, target_channel, dry_run)
+        success = publish_to_channels(publisher_service, message, target_channel, dry_run)
 
         if success:
             logger.info("\n🎉 Briefly Bot completed successfully!")
             logger.info("📊 Summary:")
-            logger.info(f"  • Articles collected: {len(articles)}")
-            logger.info(f"  • TLDR summaries created: {len(summaries)}")
+            logger.info("  • Articles collected: %s", len(articles))
+            logger.info("  • TLDR summaries created: %s", len(summaries))
             if not dry_run:
-                logger.info(f"  • Published to Slack: {target_channel}")
+                logger.info("  • Published to Slack: %s", target_channel)
             else:
                 logger.info("  • Published to Slack: DRY RUN")
             return True
@@ -372,7 +377,7 @@ def run_briefly_bot(
             return False
 
     except Exception as e:
-        logger.error(f"❌ Unexpected error in Briefly Bot: {e}")
+        logger.error("❌ Unexpected error in Briefly Bot: %s", e)
         import traceback
 
         traceback.print_exc()
@@ -422,11 +427,11 @@ Examples:
     # Print startup banner
     logger.info("🚀 Briefly Bot - AI/ML News Aggregator")
     logger.info("=" * 50)
-    logger.info(f"📅 Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    logger.info(f"🔧 Dry run: {'Yes' if args.dry_run else 'No'}")
-    logger.info(f"📊 Max articles: {args.max_articles}")
-    logger.info(f"🧠 LLM Provider: {args.llm_provider}")
-    logger.info(f"📺 Target channel: {args.channel or os.getenv('SLACK_CHANNEL_ID', 'Not specified')}")
+    logger.info("📅 Started at: %s", datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    logger.info("🔧 Dry run: %s", "Yes" if args.dry_run else "No")
+    logger.info("📊 Max articles: %s", args.max_articles)
+    logger.info("🧠 LLM Provider: %s", args.llm_provider)
+    logger.info("📺 Target channel: %s", args.channel or os.getenv("SLACK_CHANNEL_ID", "Not specified"))
     logger.info("=" * 50)
 
     # Check environment variables
@@ -434,7 +439,7 @@ Examples:
     missing_vars = [var for var in required_env_vars if not os.getenv(var)]
 
     if missing_vars:
-        logger.error(f"❌ Missing required environment variables: {', '.join(missing_vars)}")
+        logger.error("❌ Missing required environment variables: %s", ", ".join(missing_vars))
         return 1
 
     # Check Slack variables for non-dry-run
@@ -442,11 +447,12 @@ Examples:
     missing_slack_vars = [var for var in slack_vars if not os.getenv(var)]
 
     if missing_slack_vars and not args.dry_run:
-        logger.error(f"❌ Cannot run without Slack environment variables: {', '.join(missing_slack_vars)}")
+        logger.error("❌ Cannot run without Slack environment variables: %s", ", ".join(missing_slack_vars))
         return 1
     elif missing_slack_vars and args.dry_run:
         logger.warning(
-            f"⚠️ Missing Slack environment variables: {', '.join(missing_slack_vars)} - dry run will test collection and summarization only"
+            "⚠️ Missing Slack environment variables: %s - dry run will test collection and summarization only",
+            ", ".join(missing_slack_vars),
         )
 
     # Run the bot

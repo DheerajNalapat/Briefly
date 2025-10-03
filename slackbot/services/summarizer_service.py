@@ -48,7 +48,7 @@ class ContentProcessingService:
         self.summarizer: Optional[TLDRSummarizer] = None
         self.reranker: Optional[ArticleReranker] = None
 
-        logger.info(f"Initializing ContentProcessingService with provider: {llm_provider}")
+        logger.info("Initializing ContentProcessingService with provider: %s", llm_provider)
         self._initialize_summarizer()
         self._initialize_reranker(ranking_config)
 
@@ -60,12 +60,12 @@ class ContentProcessingService:
             )
 
             if self.summarizer and self.summarizer.is_available():
-                logger.info(f"✅ Summarizer initialized successfully with {self.llm_provider}")
+                logger.info("✅ Summarizer initialized successfully with %s", self.llm_provider)
             else:
-                logger.warning(f"⚠️ Summarizer not available with {self.llm_provider}")
+                logger.warning("⚠️ Summarizer not available with %s", self.llm_provider)
 
         except Exception as e:
-            logger.error(f"❌ Failed to initialize summarizer: {e}")
+            logger.error("❌ Failed to initialize summarizer: %s", e)
             self.summarizer = None
 
     def _initialize_reranker(self, ranking_config: Optional[RankingConfig] = None) -> None:
@@ -74,7 +74,7 @@ class ContentProcessingService:
             self.reranker = create_article_reranker(ranking_config)
             logger.info("✅ Article reranker initialized successfully")
         except Exception as e:
-            logger.error(f"❌ Failed to initialize reranker: {e}")
+            logger.error("❌ Failed to initialize reranker: %s", e)
             self.reranker = None
 
     def is_available(self) -> bool:
@@ -127,19 +127,19 @@ class ContentProcessingService:
             return None
 
         try:
-            logger.info(f"📝 Creating TLDR for article: {article.get('title', 'Unknown')[:50]}...")
+            logger.info("📝 Creating TLDR for article: %s...", article.get("title", "Unknown")[:50])
 
             tldr = self.summarizer.create_article_tldr(article, **kwargs)
 
             if tldr:
-                logger.info(f"✅ TLDR created successfully for article")
+                logger.info("✅ TLDR created successfully for article")
                 return tldr
             else:
-                logger.warning(f"⚠️ Failed to create TLDR for article")
+                logger.warning("⚠️ Failed to create TLDR for article")
                 return None
 
         except Exception as e:
-            logger.error(f"❌ Error creating article TLDR: {e}")
+            logger.error("❌ Error creating article TLDR: %s", e)
             return None
 
     def create_daily_digest_tldr(self, articles: List[Dict[str, Any]], **kwargs) -> Optional[DailyDigestTLDR]:
@@ -162,19 +162,19 @@ class ContentProcessingService:
             return None
 
         try:
-            logger.info(f"📊 Creating daily digest TLDR for {len(articles)} articles")
+            logger.info("📊 Creating daily digest TLDR for %s articles", len(articles))
 
             digest = self.summarizer.create_tldr_digest(articles, **kwargs)
 
             if digest:
-                logger.info(f"✅ Daily digest TLDR created successfully")
+                logger.info("✅ Daily digest TLDR created successfully")
                 return digest
             else:
-                logger.warning(f"⚠️ Failed to create daily digest TLDR")
+                logger.warning("⚠️ Failed to create daily digest TLDR")
                 return None
 
         except Exception as e:
-            logger.error(f"❌ Error creating daily digest TLDR: {e}")
+            logger.error("❌ Error creating daily digest TLDR: %s", e)
             return None
 
     def batch_summarize_articles(
@@ -199,27 +199,27 @@ class ContentProcessingService:
             logger.warning("⚠️ No articles provided for batch summarization")
             return []
 
-        logger.info(f"📝 Batch summarizing {len(articles)} articles")
+        logger.info("📝 Batch summarizing %s articles", len(articles))
 
         results = []
         for i, article in enumerate(articles):
             try:
-                logger.info(f"  Processing {i+1}/{len(articles)}: {article.get('title', 'Unknown')[:50]}...")
+                logger.info("  Processing %s/%s: %s...", i + 1, len(articles), article.get("title", "Unknown")[:50])
 
                 tldr = self.create_article_tldr(article, **kwargs)
                 results.append(tldr)
 
                 if tldr:
-                    logger.info(f"    ✅ Summary created using {self.get_provider_info()['provider']}")
+                    logger.info("    ✅ Summary created using %s", self.get_provider_info()["provider"])
                 else:
-                    logger.warning(f"    ⚠️ Summary creation failed")
+                    logger.warning("    ⚠️ Summary creation failed")
 
             except Exception as e:
-                logger.error(f"    ❌ Error processing article {i+1}: {e}")
+                logger.error("    ❌ Error processing article %s: %s", i + 1, e)
                 results.append(None)
 
         success_count = sum(1 for r in results if r is not None)
-        logger.info(f"✅ Batch summarization complete: {success_count}/{len(articles)} successful")
+        logger.info("✅ Batch summarization complete: %s/%s successful", success_count, len(articles))
 
         return results
 
@@ -241,7 +241,7 @@ class ContentProcessingService:
             logger.error("❌ Summarizer service not available")
             return None
 
-        logger.info(f"🎯 Using summarization strategy: {strategy}")
+        logger.info("🎯 Using summarization strategy: %s", strategy)
 
         if strategy == "individual":
             return self.batch_summarize_articles(articles, **kwargs)
@@ -257,7 +257,7 @@ class ContentProcessingService:
             return {"individual": individual_summaries, "digest": digest_summary}
 
         else:
-            logger.error(f"❌ Unknown summarization strategy: {strategy}")
+            logger.error("❌ Unknown summarization strategy: %s", strategy)
             return None
 
     def get_summarization_summary(self) -> Dict[str, Any]:
@@ -297,23 +297,23 @@ class ContentProcessingService:
             return articles
 
         try:
-            logger.info(f"🔄 Reranking {len(articles)} articles using strategy: {strategy}")
+            logger.info("🔄 Reranking %s articles using strategy: %s", len(articles), strategy)
             reranked = self.reranker.rerank_articles(articles, strategy=strategy)
 
             # Log ranking summary
             if reranked:
                 summary = self.reranker.get_ranking_summary(reranked)
-                logger.info(f"📊 Reranking complete. Top source: {reranked[0].get('source_type', 'unknown')}")
+                logger.info("📊 Reranking complete. Top source: %s", reranked[0].get("source_type", "unknown"))
 
                 # Log source distribution
                 source_dist = summary.get("source_distribution", {})
                 for source_type, count in source_dist.items():
-                    logger.info(f"  {source_type}: {count} articles")
+                    logger.info("  %s: %s articles", source_type, count)
 
             return reranked
 
         except Exception as e:
-            logger.error(f"❌ Error during reranking: {e}")
+            logger.error("❌ Error during reranking: %s", e)
             return articles
 
     def process_and_rank_articles(
@@ -333,7 +333,7 @@ class ContentProcessingService:
         if not articles:
             return []
 
-        logger.info(f"🎯 Processing and ranking {len(articles)} articles")
+        logger.info("🎯 Processing and ranking %s articles", len(articles))
 
         # Step 1: Rerank articles
         ranked_articles = self.rerank_articles(articles, strategy=ranking_strategy)
@@ -363,7 +363,7 @@ class ContentProcessingService:
         Returns:
             True if switch successful, False otherwise
         """
-        logger.info(f"🔄 Switching from {self.llm_provider} to {new_provider}")
+        logger.info("🔄 Switching from %s to %s", self.llm_provider, new_provider)
 
         try:
             self.llm_provider = new_provider
@@ -375,14 +375,14 @@ class ContentProcessingService:
             self._initialize_summarizer()
 
             if self.is_available():
-                logger.info(f"✅ Successfully switched to {new_provider}")
+                logger.info("✅ Successfully switched to %s", new_provider)
                 return True
             else:
-                logger.error(f"❌ Failed to switch to {new_provider}")
+                logger.error("❌ Failed to switch to %s", new_provider)
                 return False
 
         except Exception as e:
-            logger.error(f"❌ Error switching providers: {e}")
+            logger.error("❌ Error switching providers: %s", e)
             return False
 
     def is_healthy(self) -> bool:

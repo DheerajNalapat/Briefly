@@ -7,9 +7,8 @@ result aggregation.
 """
 
 import logging
-from typing import List, Dict, Any, Optional, Union
+from typing import List, Dict, Any, Optional
 from datetime import datetime
-from pathlib import Path
 
 from slackbot.collectors.base_collector import BaseCollector, CollectorManager
 from slackbot.collectors.arxiv_collector import create_arxiv_collector
@@ -72,10 +71,10 @@ class AggregationService:
             # Initialize collector manager for future extensibility
             self.collector_manager = CollectorManager()
 
-            logger.info(f"📊 AggregationService initialized with {len(self.collectors)} collectors")
+            logger.info("📊 AggregationService initialized with %s collectors", len(self.collectors))
 
         except Exception as e:
-            logger.error(f"❌ Failed to initialize collectors: {e}")
+            logger.error("❌ Failed to initialize collectors: %s", e)
             raise
 
     def get_available_collectors(self) -> List[str]:
@@ -128,15 +127,15 @@ class AggregationService:
         if not collector.is_available():
             raise ValueError(f"Collector '{source_name}' is not available")
 
-        logger.info(f"🔍 Collecting from {source_name}")
+        logger.info("🔍 Collecting from %s", source_name)
 
         try:
             articles = collector.collect(**kwargs)
-            logger.info(f"✅ Collected {len(articles)} articles from {source_name}")
+            logger.info("✅ Collected %s articles from %s", len(articles), source_name)
             return articles
 
         except Exception as e:
-            logger.error(f"❌ Failed to collect from {source_name}: {e}")
+            logger.error("❌ Failed to collect from %s: %s", source_name, e)
             collector.error_count += 1
             raise
 
@@ -163,10 +162,10 @@ class AggregationService:
                 all_articles.extend(articles)
 
             except Exception as e:
-                logger.error(f"❌ Failed to collect from {source_name}: {e}")
+                logger.error("❌ Failed to collect from %s: %s", source_name, e)
                 continue
 
-        logger.info(f"📊 Total articles collected from all sources: {len(all_articles)}")
+        logger.info("📊 Total articles collected from all sources: %s", len(all_articles))
         return all_articles
 
     def collect_balanced(self, max_articles: int = 20, balance_sources: bool = True, **kwargs) -> List[Dict[str, Any]]:
@@ -181,7 +180,7 @@ class AggregationService:
         Returns:
             List of collected news items with balanced representation
         """
-        logger.info(f"🎯 Collecting {max_articles} articles with balanced sources: {balance_sources}")
+        logger.info("🎯 Collecting %s articles with balanced sources: %s", max_articles, balance_sources)
 
         if not balance_sources:
             # Simple collection without balancing
@@ -222,13 +221,13 @@ class AggregationService:
 
                 if source_limit is not None:
                     balanced_articles.extend(articles[:source_limit])
-                    logger.info(f"📊 {source_name}: collected {len(articles[:source_limit])} articles")
+                    logger.info("📊 %s: collected %s articles", source_name, len(articles[:source_limit]))
                 else:
                     balanced_articles.extend(articles)
-                    logger.info(f"📊 {source_name}: collected {len(articles)} articles")
+                    logger.info("📊 %s: collected %s articles", source_name, len(articles))
 
             except Exception as e:
-                logger.error(f"❌ Failed to collect from {source_name}: {e}")
+                logger.error("❌ Failed to collect from %s: %s", source_name, e)
                 continue
 
         # Ensure we don't exceed max_articles if specified
@@ -238,7 +237,7 @@ class AggregationService:
             final_articles = balanced_articles
 
         logger.info(
-            f"✅ Balanced collection complete: {len(final_articles)} articles from {len(available_sources)} sources"
+            "✅ Balanced collection complete: %s articles from %s sources", len(final_articles), len(available_sources)
         )
         return final_articles
 
@@ -253,7 +252,7 @@ class AggregationService:
         Returns:
             List of collected news items with prioritized representation
         """
-        logger.info(f"🎯 Collecting {max_articles} articles with prioritized sources (NewsAPI → RSS → ArXiv)")
+        logger.info("🎯 Collecting %s articles with prioritized sources (NewsAPI → RSS → ArXiv)", max_articles)
 
         available_sources = self.get_available_collectors()
         if not available_sources:
@@ -281,10 +280,12 @@ class AggregationService:
                 newsapi_articles = self.collect_from_source("newsapi", **newsapi_kwargs)
                 prioritized_articles.extend(newsapi_articles)
                 remaining_articles -= len(newsapi_articles)
-                logger.info(f"📊 newsapi: collected {len(newsapi_articles)} articles (remaining: {remaining_articles})")
+                logger.info(
+                    "📊 newsapi: collected %s articles (remaining: %s)", len(newsapi_articles), remaining_articles
+                )
 
             except Exception as e:
-                logger.error(f"❌ Failed to collect from newsapi: {e}")
+                logger.error("❌ Failed to collect from newsapi: %s", e)
 
         # Priority 2: RSS articles (limited to remaining space)
         if "rss" in available_sources and remaining_articles > 0:
@@ -298,10 +299,10 @@ class AggregationService:
                 rss_articles = self.collect_from_source("rss", **rss_kwargs)
                 prioritized_articles.extend(rss_articles)
                 remaining_articles -= len(rss_articles)
-                logger.info(f"📊 rss: collected {len(rss_articles)} articles (remaining: {remaining_articles})")
+                logger.info("📊 rss: collected %s articles (remaining: %s)", len(rss_articles), remaining_articles)
 
             except Exception as e:
-                logger.error(f"❌ Failed to collect from rss: {e}")
+                logger.error("❌ Failed to collect from rss: %s", e)
 
         # Priority 3: ArXiv papers (maximum 3)
         if "arxiv" in available_sources and remaining_articles > 0:
@@ -315,18 +316,18 @@ class AggregationService:
                 arxiv_articles = self.collect_from_source("arxiv", **arxiv_kwargs)
                 prioritized_articles.extend(arxiv_articles)
                 remaining_articles -= len(arxiv_articles)
-                logger.info(f"📊 arxiv: collected {len(arxiv_articles)} articles (remaining: {remaining_articles})")
+                logger.info("📊 arxiv: collected %s articles (remaining: %s)", len(arxiv_articles), remaining_articles)
 
             except Exception as e:
-                logger.error(f"❌ Failed to collect from arxiv: {e}")
+                logger.error("❌ Failed to collect from arxiv: %s", e)
 
         # Ensure we don't exceed max_articles
         final_articles = prioritized_articles[:max_articles]
 
-        logger.info(f"✅ Prioritized collection complete: {len(final_articles)} articles (NewsAPI → RSS → ArXiv)")
+        logger.info("✅ Prioritized collection complete: %s articles (NewsAPI → RSS → ArXiv)", len(final_articles))
         return final_articles
 
-    def get_collection_summary(self) -> Dict[str, Any]:
+    def get_collection_service_summary(self) -> Dict[str, Any]:
         """
         Get a summary of the collection service status.
 
@@ -363,10 +364,10 @@ class AggregationService:
             collector: Collector instance
         """
         if name in self.collectors:
-            logger.warning(f"⚠️ Collector '{name}' already exists, replacing")
+            logger.warning("⚠️ Collector '%s' already exists, replacing", name)
 
         self.collectors[name] = collector
-        logger.info(f"✅ Added collector '{name}' to AggregationService")
+        logger.info("✅ Added collector '%s' to AggregationService", name)
 
     def remove_collector(self, name: str) -> bool:
         """
@@ -380,6 +381,6 @@ class AggregationService:
         """
         if name in self.collectors:
             del self.collectors[name]
-            logger.info(f"✅ Removed collector '{name}' from AggregationService")
+            logger.info("✅ Removed collector '%s' from AggregationService", name)
             return True
         return False

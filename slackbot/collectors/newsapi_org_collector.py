@@ -206,7 +206,7 @@ class NewsAPICollector(BaseCollector):
                 logger.warning("NEWSAPI_KEY environment variable not set. NewsAPI features will be disabled.")
 
         except Exception as e:
-            logger.error(f"Error initializing NewsAPI client: {e}")
+            logger.error("Error initializing NewsAPI client: %s", e)
 
     def is_available(self) -> bool:
         """Check if the collector is available and ready to use."""
@@ -230,7 +230,7 @@ class NewsAPICollector(BaseCollector):
             default_sources.append(source)
 
         self.sources = default_sources
-        logger.info(f"Loaded {len(default_sources)} NewsAPI sources with comprehensive query params")
+        logger.info("Loaded %s NewsAPI sources with comprehensive query params", len(default_sources))
 
     def should_update_source(self, source: NewsAPISource) -> bool:
         """Check if a source should be updated based on its interval."""
@@ -276,7 +276,7 @@ class NewsAPICollector(BaseCollector):
             # Set page size
             params["page_size"] = source.max_items or 10
 
-            logger.info(f"NewsAPI params for {source.name}: {params}")
+            logger.info("NewsAPI params for %s: %s", source.name, params)
 
             # Use get_everything for all categories like the POC approach
             # Remove country parameter as it's not supported by get_everything
@@ -287,12 +287,16 @@ class NewsAPICollector(BaseCollector):
 
             # Log response status for debugging
             logger.info(
-                f"NewsAPI response for {source.name}: status={response.get('status')}, totalResults={response.get('totalResults', 0)}, articles={len(response.get('articles', []))}"
+                "NewsAPI response for %s: status=%s, totalResults=%s, articles=%s",
+                source.name,
+                response.get("status"),
+                response.get("totalResults", 0),
+                len(response.get("articles", [])),
             )
 
             if response.get("status") != "ok":
-                logger.warning(f"NewsAPI error for {source.name}: {response.get('message', 'Unknown error')}")
-                logger.info(f"Full response: {response}")
+                logger.warning("NewsAPI error for %s: %s", source.name, response.get("message", "Unknown error"))
+                logger.info("Full response: %s", response)
                 return []
 
             articles = []
@@ -325,14 +329,14 @@ class NewsAPICollector(BaseCollector):
                 articles.append(news_item)
                 self.articles_cache[content_hash] = news_item
 
-            logger.info(f"Fetched {len(articles)} articles from {source.name}")
+            logger.info("Fetched %s articles from %s", len(articles), source.name)
             return articles
 
         except Exception as e:
-            logger.error(f"Error fetching from NewsAPI {source.name}: {e}")
+            logger.error("Error fetching from NewsAPI %s: %s", source.name, e)
             import traceback
 
-            logger.debug(f"Traceback: {traceback.format_exc()}")
+            logger.debug("Traceback: %s", traceback.format_exc())
             return []
 
     def collect(self, **kwargs) -> List[Dict[str, Any]]:
@@ -344,7 +348,7 @@ class NewsAPICollector(BaseCollector):
                 continue
 
             if not self.should_update_source(source) and not kwargs.get("force", False):
-                logger.debug(f"Skipping source {source.name} - not due for update")
+                logger.debug("Skipping source %s - not due for update", source.name)
                 continue
 
             try:
@@ -359,10 +363,10 @@ class NewsAPICollector(BaseCollector):
                     all_articles.append(article_dict)
 
             except Exception as e:
-                logger.error(f"Error collecting from source {source.name}: {e}")
+                logger.error("Error collecting from source %s: %s", source.name, e)
                 continue
 
-        logger.info(f"Collected {len(all_articles)} total articles from {self.name}")
+        logger.info("Collected %s total articles from %s", len(all_articles), self.name)
         return all_articles
 
     def get_source_status(self) -> List[Dict[str, Any]]:
@@ -372,19 +376,19 @@ class NewsAPICollector(BaseCollector):
     def add_source(self, source: NewsAPISource):
         """Add a new NewsAPI source to the collector."""
         self.sources.append(source)
-        logger.info(f"Added NewsAPI source: {source.name}")
+        logger.info("Added NewsAPI source: %s", source.name)
 
     def remove_source(self, name: str):
         """Remove a NewsAPI source by name."""
         self.sources = [s for s in self.sources if s.name != name]
-        logger.info(f"Removed NewsAPI source: {name}")
+        logger.info("Removed NewsAPI source: %s", name)
 
     def enable_source(self, name: str):
         """Enable a NewsAPI source by name."""
         for source in self.sources:
             if source.name == name:
                 source.enabled = True
-                logger.info(f"Enabled NewsAPI source: {name}")
+                logger.info("Enabled NewsAPI source: %s", name)
                 break
 
     def disable_source(self, name: str):
@@ -392,7 +396,7 @@ class NewsAPICollector(BaseCollector):
         for source in self.sources:
             if source.name == name:
                 source.enabled = False
-                logger.info(f"Disabled NewsAPI source: {name}")
+                logger.info("Disabled NewsAPI source: %s", name)
                 break
 
     def fetch_news_by_categories(
@@ -407,15 +411,15 @@ class NewsAPICollector(BaseCollector):
         # Clear cache to avoid deduplication issues with categorized fetching
         original_cache_size = len(self.articles_cache)
         self.articles_cache.clear()
-        logger.info(f"Cleared cache (was {original_cache_size} items) for categorized fetching")
+        logger.info("Cleared cache (was %s items) for categorized fetching", original_cache_size)
 
         all_articles = []
         total_articles = 0
 
         for category, params in query_params.items():
-            logger.info(f"--- Fetching {category.value.upper()} News ---")
-            logger.info(f"Query: {params['query']}")
-            logger.info(f"Keywords: {', '.join(params['keywords'][:5])}...")  # Show first 5 keywords
+            logger.info("--- Fetching %s News ---", category.value.upper())
+            logger.info("Query: %s", params["query"])
+            logger.info("Keywords: %s...", ", ".join(params["keywords"][:5]))  # Show first 5 keywords
 
             # Create a temporary source for this category
             temp_source = NewsAPISource(
@@ -440,10 +444,10 @@ class NewsAPICollector(BaseCollector):
                 all_articles.append(article_dict)
 
             total_articles += len(articles)
-            logger.info(f"Found {len(articles)} articles for {category.value}")
+            logger.info("Found %s articles for %s", len(articles), category.value)
 
-        logger.info(f"=== Summary ===")
-        logger.info(f"Total articles collected: {total_articles}")
+        logger.info("=== Summary ===")
+        logger.info("Total articles collected: %s", total_articles)
         return all_articles
 
     def fetch_news_by_single_category(
@@ -454,17 +458,17 @@ class NewsAPICollector(BaseCollector):
             query_params = NEWS_QUERY_PARAMS
 
         if category not in query_params:
-            logger.warning(f"Category {category.value} not found in query_params")
+            logger.warning("Category %s not found in query_params", category.value)
             return []
 
         params = query_params[category]
-        logger.info(f"=== Fetching {category.value.upper()} News ===")
-        logger.info(f"Query: {params['query']}")
+        logger.info("=== Fetching %s News ===", category.value.upper())
+        logger.info("Query: %s", params["query"])
 
         # Clear cache to avoid deduplication issues with single category fetching
         original_cache_size = len(self.articles_cache)
         self.articles_cache.clear()
-        logger.info(f"Cleared cache (was {original_cache_size} items) for single category fetching")
+        logger.info("Cleared cache (was %s items) for single category fetching", original_cache_size)
 
         # Create a temporary source for this category
         temp_source = NewsAPISource(
@@ -489,9 +493,9 @@ class NewsAPICollector(BaseCollector):
             all_articles.append(article_dict)
 
         if all_articles:
-            logger.info(f"Found {len(all_articles)} articles for {category.value}")
+            logger.info("Found %s articles for %s", len(all_articles), category.value)
         else:
-            logger.info(f"No articles found for {category.value}")
+            logger.info("No articles found for %s", category.value)
 
         return all_articles
 

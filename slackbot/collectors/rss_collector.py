@@ -9,12 +9,9 @@ AI/ML, agentic systems, and technology development content.
 import os
 import logging
 import hashlib
-import time
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Any
-from dataclasses import dataclass, asdict
-import feedparser
-from urllib.parse import urlparse
+from dataclasses import dataclass
 
 # Third-party imports
 try:
@@ -83,7 +80,7 @@ class RSSCollector(BaseCollector):
         else:
             self._load_default_sources()
 
-        logger.info(f"✅ RSS Collector initialized with {len(self.sources)} sources")
+        logger.info("✅ RSS Collector initialized with %s sources", len(self.sources))
         self.available = True
 
     def is_available(self) -> bool:
@@ -373,7 +370,7 @@ class RSSCollector(BaseCollector):
         ]
 
         self.sources = default_sources
-        logger.info(f"📡 Loaded {len(self.sources)} default RSS sources")
+        logger.info("📡 Loaded %s default RSS sources", len(self.sources))
 
     def _load_sources_from_config(self, config_path: str) -> None:
         """Load RSS sources from configuration file."""
@@ -387,10 +384,10 @@ class RSSCollector(BaseCollector):
                 source = RSSSource(**source_config)
                 self.sources.append(source)
 
-            logger.info(f"📡 Loaded {len(self.sources)} RSS sources from {config_path}")
+            logger.info("📡 Loaded %s RSS sources from %s", len(self.sources), config_path)
 
         except Exception as e:
-            logger.error(f"❌ Error loading RSS config from {config_path}: {e}")
+            logger.error("❌ Error loading RSS config from %s: %s", config_path, e)
             logger.info("🔄 Falling back to default RSS sources")
             self._load_default_sources()
 
@@ -462,16 +459,16 @@ class RSSCollector(BaseCollector):
         articles = []
 
         try:
-            logger.info(f"📡 Fetching RSS feed: {source.name}")
+            logger.info("📡 Fetching RSS feed: %s", source.name)
 
             # Parse the RSS feed
             feed = feedparser.parse(source.url)
 
             if feed.bozo:
-                logger.warning(f"⚠️ RSS parsing issues for {source.name}: {feed.bozo_exception}")
+                logger.warning("⚠️ RSS parsing issues for %s: %s", source.name, feed.bozo_exception)
 
             if not feed.entries:
-                logger.warning(f"⚠️ No entries found in RSS feed: {source.name}")
+                logger.warning("⚠️ No entries found in RSS feed: %s", source.name)
                 return articles
 
             # Process feed entries
@@ -535,16 +532,16 @@ class RSSCollector(BaseCollector):
                     self.news_cache[content_hash] = datetime.now()
 
                 except Exception as e:
-                    logger.warning(f"⚠️ Error processing RSS entry from {source.name}: {e}")
+                    logger.warning("⚠️ Error processing RSS entry from %s: %s", source.name, e)
                     continue
 
             # Update last fetch time
             self.last_fetch_times[source.name] = datetime.now()
 
-            logger.info(f"✅ Fetched {len(articles)} articles from {source.name}")
+            logger.info("✅ Fetched %s articles from %s", len(articles), source.name)
 
         except Exception as e:
-            logger.error(f"❌ Error fetching RSS feed {source.name}: {e}")
+            logger.error("❌ Error fetching RSS feed %s: %s", source.name, e)
 
         return articles
 
@@ -563,7 +560,7 @@ class RSSCollector(BaseCollector):
             logger.error("❌ RSS collector not available")
             return []
 
-        logger.info(f"📡 Collecting articles from {len(self.sources)} RSS sources...")
+        logger.info("📡 Collecting articles from %s RSS sources...", len(self.sources))
 
         all_articles = []
 
@@ -573,7 +570,7 @@ class RSSCollector(BaseCollector):
                 continue
 
             if not self._should_update_source(source):
-                logger.debug(f"⏰ Skipping {source.name} (not due for update)")
+                logger.debug("⏰ Skipping %s (not due for update)", source.name)
                 continue
 
             articles = self._fetch_rss_feed(source)
@@ -589,7 +586,7 @@ class RSSCollector(BaseCollector):
         # Clean up old cache entries (older than 24 hours)
         self._cleanup_cache()
 
-        logger.info(f"✅ RSS collection complete: {len(all_articles)} articles")
+        logger.info("✅ RSS collection complete: %s articles", len(all_articles))
         return all_articles
 
     def _cleanup_cache(self) -> None:
@@ -601,7 +598,7 @@ class RSSCollector(BaseCollector):
             del self.news_cache[hash_key]
 
         if old_hashes:
-            logger.debug(f"🧹 Cleaned up {len(old_hashes)} old cache entries")
+            logger.debug("🧹 Cleaned up %s old cache entries", len(old_hashes))
 
     def get_source_status(self) -> Dict[str, Any]:
         """Get status of all RSS sources."""
@@ -628,20 +625,20 @@ class RSSCollector(BaseCollector):
         """Add a new RSS source."""
         try:
             self.sources.append(source)
-            logger.info(f"✅ Added RSS source: {source.name}")
+            logger.info("✅ Added RSS source: %s", source.name)
             return True
         except Exception as e:
-            logger.error(f"❌ Error adding RSS source {source.name}: {e}")
+            logger.error("❌ Error adding RSS source %s: %s", source.name, e)
             return False
 
     def remove_source(self, source_name: str) -> bool:
         """Remove an RSS source by name."""
         try:
             self.sources = [s for s in self.sources if s.name != source_name]
-            logger.info(f"✅ Removed RSS source: {source_name}")
+            logger.info("✅ Removed RSS source: %s", source_name)
             return True
         except Exception as e:
-            logger.error(f"❌ Error removing RSS source {source_name}: {e}")
+            logger.error("❌ Error removing RSS source %s: %s", source_name, e)
             return False
 
 

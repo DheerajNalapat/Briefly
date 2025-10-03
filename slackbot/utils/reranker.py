@@ -161,7 +161,7 @@ class ArticleReranker:
             return recency_score * self.config.recency_weight
 
         except Exception as e:
-            logger.warning(f"Error calculating recency score: {e}")
+            logger.warning("Error calculating recency score: %s", e)
             return 0.5
 
     def calculate_content_score(self, article: Dict[str, Any]) -> float:
@@ -395,7 +395,7 @@ class ArticleReranker:
         if not articles:
             return []
 
-        logger.info(f"🔄 Reranking {len(articles)} articles using strategy: {strategy}")
+        logger.info("🔄 Reranking %s articles using strategy: %s", len(articles), strategy)
 
         if strategy == "smart":
             # Use all ranking factors
@@ -425,21 +425,21 @@ class ArticleReranker:
 
             scored_articles.sort(key=lambda x: x[1], reverse=True)
 
-        elif strategy == "custom":
-            # Use custom ranking function if provided
-            custom_ranker = getattr(self, "custom_ranking_function", None)
-            if custom_ranker and callable(custom_ranker):
-                scored_articles = []
-                for article in articles:
-                    score = custom_ranker(article)
-                    scored_articles.append((article, score))
+        # elif strategy == "custom":
+        #     # Use custom ranking function if provided
+        #     custom_ranker = getattr(self, "custom_ranking_function", None)
+        #     if custom_ranker and callable(custom_ranker):
+        #         scored_articles = []
+        #         for article in articles:
+        #             score = custom_ranker(article)
+        #             scored_articles.append((article, score))
 
-                scored_articles.sort(key=lambda x: x[1], reverse=True)
-            else:
-                logger.warning("Custom ranking strategy requested but no custom function found")
-                return articles
+        #         scored_articles.sort(key=lambda x: x[1], reverse=True)
+        #     else:
+        #         logger.warning("Custom ranking strategy requested but no custom function found")
+        #         return articles
         else:
-            logger.warning(f"Unknown ranking strategy: {strategy}, returning original order")
+            logger.warning("Unknown ranking strategy: %s, returning original order", strategy)
             return articles
 
         # Extract articles from scored tuples
@@ -449,7 +449,7 @@ class ArticleReranker:
         if reranked_articles:
             top_source = reranked_articles[0].get("source_type", "unknown")
             top_source_name = reranked_articles[0].get("source", "unknown")
-            logger.info(f"✅ Reranking complete. Top article: {top_source} - {top_source_name}")
+            logger.info("✅ Reranking complete. Top article: %s - %s", top_source, top_source_name)
 
         return reranked_articles
 
@@ -522,8 +522,6 @@ def create_article_reranker(config: Optional[RankingConfig] = None) -> ArticleRe
 
 if __name__ == "__main__":
     # Test the reranker
-    import logging
-
     # Set up logging
     logging.basicConfig(level=logging.INFO)
 
