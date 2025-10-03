@@ -3,7 +3,6 @@ TLDR summarizer using OpenAI (default) and Google Gemini (fallback) with LangCha
 Creates Slack-friendly TLDR summaries of news articles.
 """
 
-import os
 import logging
 from typing import List, Any, Optional, Literal
 from datetime import datetime
@@ -15,6 +14,7 @@ from langchain.prompts import ChatPromptTemplate
 from langchain.output_parsers import PydanticOutputParser
 
 from .models import TLDRSummary, SlackMessage, DailyDigestTLDR, ArticleTLDR
+from .categories import get_category_choices
 from slackbot.config import OPENAI_CONFIG, GEMINI_CONFIG
 
 logger = logging.getLogger(__name__)
@@ -66,7 +66,7 @@ class TLDRSummarizer:
             elif self.llm_provider == "gemini":
                 self._initialize_gemini_llm()
         except Exception as e:
-            logger.error(f"Failed to initialize {self.llm_provider} LLM: {e}")
+            logger.error("Failed to initialize %s LLM: %s", self.llm_provider, e)
             self.llm = None
 
     def _initialize_openai_llm(self):
@@ -92,7 +92,7 @@ class TLDRSummarizer:
             max_tokens=2048,
         )
 
-        logger.info(f"Initialized OpenAI TLDR summarizer with model: {self.model_name}")
+        logger.info("Initialized OpenAI TLDR summarizer with model: %s", self.model_name)
 
     def _initialize_gemini_llm(self):
         """Initialize Gemini LLM."""
@@ -117,7 +117,7 @@ class TLDRSummarizer:
             max_output_tokens=2048,
         )
 
-        logger.info(f"Initialized Gemini TLDR summarizer with model: {self.model_name}")
+        logger.info("Initialized Gemini TLDR summarizer with model: %s", self.model_name)
 
     def _initialize_openai_fallback(self):
         """Initialize OpenAI as fallback LLM."""
@@ -129,9 +129,9 @@ class TLDRSummarizer:
                     temperature=0.3,
                     max_tokens=2048,
                 )
-                logger.info(f"Initialized OpenAI fallback with model: {OPENAI_CONFIG['model']}")
+                logger.info("Initialized OpenAI fallback with model: %s", OPENAI_CONFIG["model"])
         except Exception as e:
-            logger.warning(f"Failed to initialize OpenAI fallback: {e}")
+            logger.warning("Failed to initialize OpenAI fallback: %s", e)
 
     def _initialize_gemini_fallback(self):
         """Initialize Gemini as fallback LLM."""
@@ -143,9 +143,9 @@ class TLDRSummarizer:
                     temperature=0.3,
                     max_output_tokens=2048,
                 )
-                logger.info(f"Initialized Gemini fallback with model: {GEMINI_CONFIG['model']}")
+                logger.info("Initialized Gemini fallback with model: %s", GEMINI_CONFIG["model"])
         except Exception as e:
-            logger.warning(f"Failed to initialize Gemini fallback: {e}")
+            logger.warning("Failed to initialize Gemini fallback: %s", e)
 
     def is_available(self) -> bool:
         """Check if the summarizer is available and ready to use."""
@@ -154,7 +154,7 @@ class TLDRSummarizer:
     def _try_fallback_llm(self) -> bool:
         """Try to use fallback LLM if primary LLM fails."""
         if self.fallback_llm and not self.llm:
-            logger.info(f"Switching to {self.llm_provider} fallback LLM")
+            logger.info("Switching to %s fallback LLM", self.llm_provider)
             self.llm = self.fallback_llm
             return True
         return False
@@ -175,7 +175,7 @@ class TLDRSummarizer:
         if not self.is_available():
             # Try fallback LLM first
             if self._try_fallback_llm():
-                logger.info(f"Using {self.llm_provider} fallback LLM")
+                logger.info("Using %s fallback LLM", self.llm_provider)
             else:
                 logger.warning("No LLM available, using basic fallback TLDR")
                 return self._create_basic_tldr(articles)
@@ -210,7 +210,7 @@ class TLDRSummarizer:
                     "format_instructions": self.digest_parser.get_format_instructions(),
                 }
             )
-            print(f"🔍 Result type: {type(result)}")
+            print("🔍 Result type: %s", type(result))
             processing_time = time.time() - start_time
 
             # Extract key information
@@ -234,11 +234,11 @@ class TLDRSummarizer:
             )
 
         except Exception as e:
-            logger.error(f"Error creating TLDR digest with {self.llm_provider}: {e}")
+            logger.error("Error creating TLDR digest with %s: %s", self.llm_provider, e)
 
             # Try fallback LLM if available
             if self._try_fallback_llm():
-                logger.info(f"Retrying with {self.llm_provider} fallback LLM")
+                logger.info("Retrying with %s fallback LLM", self.llm_provider)
                 try:
                     # Retry with fallback LLM
                     chain = prompt | self.llm | self.digest_parser
@@ -269,7 +269,7 @@ class TLDRSummarizer:
                         color="#ff6b6b",  # Red for daily digest
                     )
                 except Exception as fallback_e:
-                    logger.error(f"Fallback LLM also failed: {fallback_e}")
+                    logger.error("Fallback LLM also failed: %s", fallback_e)
                     return self._create_basic_tldr(articles)
             else:
                 return self._create_basic_tldr(articles)
@@ -287,24 +287,28 @@ class TLDRSummarizer:
         if not self.is_available():
             # Try fallback LLM first
             if self._try_fallback_llm():
-                logger.info(f"Using {self.llm_provider} fallback LLM")
+                logger.info("Using %s fallback LLM", self.llm_provider)
             else:
                 logger.warning("No LLM available, using basic fallback TLDR")
                 return self._create_single_article_basic_tldr(article)
 
         try:
-            # Create structured TLDR using Gemini
+            # Create structured TLDR using the LLM
             prompt = ChatPromptTemplate.from_messages(
                 [
                     (
                         "system",
                         "You are an expert AI news analyst creating TLDR summaries. "
                         "Focus on the key facts, why it matters, and make it engaging for busy professionals. "
-                        "Keep it concise and actionable.",
+                        "Keep it concise and actionable. "
+                        "You must also categorize the article into one of the predefined categories.",
                     ),
                     (
                         "human",
-                        "Create a TLDR summary for this article:\n\nTitle: {title}\nContent: {content}\n\n{format_instructions}",
+                        "Create a TLDR summary for this article:\n\nTitle: {title}\nContent: {content}\n\n"
+                        "Available categories:\n{category_choices}\n\n"
+                        "Choose the most appropriate category for this article.\n\n"
+                        "{format_instructions}",
                     ),
                 ]
             )
@@ -315,6 +319,7 @@ class TLDRSummarizer:
                 {
                     "title": article.get("title", "Unknown Title"),
                     "content": article.get("content", article.get("summary", "No content available")),
+                    "category_choices": get_category_choices(),
                     "format_instructions": self.article_parser.get_format_instructions(),
                 }
             )
@@ -323,11 +328,11 @@ class TLDRSummarizer:
             return TLDRSummary(
                 tldr_text=result.tldr,
                 key_points=result.key_facts,
-                trending_topics=[article.get("category", "AI/ML")],
+                trending_topics=[result.category],  # Use LLM-generated category
                 impact_level="Medium",  # Default for single articles
                 reading_time=result.reading_time,
                 article_count=1,
-                categories=[article.get("category", "Unknown")],
+                categories=[result.category],  # Use LLM-generated category
                 sources=[article.get("source", "Unknown")],
                 generated_at=datetime.now().isoformat(),
                 model_used=self.model_name,
@@ -336,11 +341,11 @@ class TLDRSummarizer:
             )
 
         except Exception as e:
-            logger.error(f"Error creating article TLDR with {self.llm_provider}: {e}")
+            logger.error("Error creating article TLDR with %s: %s", self.llm_provider, e)
 
             # Try fallback LLM if available
             if self._try_fallback_llm():
-                logger.info(f"Retrying with {self.llm_provider} fallback LLM")
+                logger.info("Retrying with %s fallback LLM", self.llm_provider)
                 try:
                     # Retry with fallback LLM
                     chain = prompt | self.llm | self.article_parser
@@ -348,6 +353,7 @@ class TLDRSummarizer:
                         {
                             "title": article.get("title", "Unknown Title"),
                             "content": article.get("content", article.get("summary", "No content available")),
+                            "category_choices": get_category_choices(),
                             "format_instructions": self.article_parser.get_format_instructions(),
                         }
                     )
@@ -356,11 +362,11 @@ class TLDRSummarizer:
                     return TLDRSummary(
                         tldr_text=result.tldr,
                         key_points=result.key_facts,
-                        trending_topics=[article.get("category", "AI/ML")],
+                        trending_topics=[result.category],  # Use LLM-generated category
                         impact_level="Medium",  # Default for single articles
                         reading_time=result.reading_time,
                         article_count=1,
-                        categories=[article.get("category", "Unknown")],
+                        categories=[result.category],  # Use LLM-generated category
                         sources=[article.get("source", "Unknown")],
                         generated_at=datetime.now().isoformat(),
                         model_used=f"{self.llm_provider}_fallback",
@@ -368,7 +374,7 @@ class TLDRSummarizer:
                         color="#36a64f",  # Green for single articles
                     )
                 except Exception as fallback_e:
-                    logger.error(f"Fallback LLM also failed: {fallback_e}")
+                    logger.error("Fallback LLM also failed: %s", fallback_e)
                     return self._create_single_article_basic_tldr(article)
             else:
                 return self._create_single_article_basic_tldr(article)
@@ -472,7 +478,7 @@ class TLDRSummarizer:
         sources = list(set(article.get("source", "Unknown") for article in articles))
 
         # Create simple TLDR text
-        tldr_text = f"📰 *Daily AI/ML News Roundup*\n\n"
+        tldr_text = "📰 *Daily AI/ML News Roundup*\n\n"
         tldr_text += f"Today's top {len(articles)} stories covering {', '.join(categories[:3])}.\n"
         tldr_text += f"Key sources: {', '.join(sources[:3])}"
 
@@ -527,7 +533,7 @@ class TLDRSummarizer:
             articles_text += f"Summary: {article.get('summary', 'No summary')}\n"
             content = article.get("content", article.get("summary", "No content"))
             articles_text += f"Content: {content[:300]}...\n\n"
-        print(f"🔍 Articles text: {articles_text}")
+        print("🔍 Articles text: %s", articles_text)
         return articles_text
 
     def _extract_impact_level(self, impact_text: str) -> str:

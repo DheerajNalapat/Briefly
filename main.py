@@ -24,10 +24,8 @@ from typing import List, Dict, Any, Optional
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
-# Import Briefly Bot components
-from slackbot.collectors.api_collector import create_api_collector
-from slackbot.summarizer.tldr_summarizer import create_tldr_summarizer
-from slackbot.slack.publisher import create_slack_publisher
+# Import Briefly Bot services
+from slackbot.services import AggregationService, ContentProcessingService, PublisherService
 from slackbot.summarizer.models import SlackMessage
 
 
@@ -35,12 +33,16 @@ def setup_logging(verbose: bool = False) -> None:
     """Set up logging configuration."""
     log_level = logging.DEBUG if verbose else logging.INFO
 
+    # Create logs directory if it doesn't exist
+    logs_dir = Path("logs")
+    logs_dir.mkdir(exist_ok=True)
+
     logging.basicConfig(
         level=log_level,
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         handlers=[
             logging.StreamHandler(sys.stdout),
-            logging.FileHandler(f'briefly_bot_{datetime.now().strftime("%Y%m%d")}.log'),
+            logging.FileHandler(logs_dir / f'briefly_bot_{datetime.now().strftime("%Y%m%d")}.log'),
         ],
     )
 
@@ -52,12 +54,12 @@ def setup_logging(verbose: bool = False) -> None:
     logger.info("Briefly Bot logging initialized")
 
 
-def collect_news(collector, max_articles: int = 20) -> List[Dict[str, Any]]:
+def collect_news(aggregation_service: AggregationService, max_articles: int = 20) -> List[Dict[str, Any]]:
     """
-    Collect news from configured sources.
+    Collect news using the AggregationService.
 
     Args:
-        collector: API news collector instance
+        aggregation_service: Aggregation service instance
         max_articles: Maximum number of articles to collect
 
     Returns:
@@ -68,61 +70,36 @@ def collect_news(collector, max_articles: int = 20) -> List[Dict[str, Any]]:
     try:
         logger.info("🔍 Starting news collection...")
 
-        if not collector.is_available():
-            logger.error("❌ News collector not available")
-            return []
-
-        # Collect news articles
-        articles = collector.collect()
+        # Use the service to collect news with prioritized sources (NewsAPI → RSS → ArXiv)
+        articles = aggregation_service.collect_prioritized(max_articles=max_articles)
 
         if not articles:
             logger.warning("⚠️ No articles collected")
             return []
 
-        # Limit to max_articles with balanced sampling
-        if len(articles) > max_articles:
-            # Ensure balanced representation of both ArXiv and NewsAPI articles
-            arxiv_articles = [article for article in articles if article.get("source_type") == "arxiv"]
-            newsapi_articles = [article for article in articles if article.get("source_type") == "newsapi"]
-
-            # Calculate balanced distribution
-            arxiv_limit = min(len(arxiv_articles), max_articles // 2)
-            newsapi_limit = max_articles - arxiv_limit
-
-            # Take balanced samples
-            balanced_articles = arxiv_articles[:arxiv_limit] + newsapi_articles[:newsapi_limit]
-
-            # If we still have room, add remaining articles
-            if len(balanced_articles) < max_articles:
-                remaining_articles = [article for article in articles if article not in balanced_articles]
-                balanced_articles.extend(remaining_articles[: max_articles - len(balanced_articles)])
-
-            articles = balanced_articles
-            logger.info(
-                f"📊 Limited collection to {len(articles)} articles (balanced: {len([a for a in articles if a.get('source_type') == 'arxiv'])} ArXiv, {len([a for a in articles if a.get('source_type') == 'newsapi'])} NewsAPI)"
-            )
-
-        logger.info(f"✅ Successfully collected {len(articles)} articles")
+        logger.info("✅ Successfully collected %s articles", len(articles))
 
         # Log sample articles
         for i, article in enumerate(articles[:3], 1):
-            logger.info(f"  {i}. {article['title'][:60]}...")
-            logger.info(f"     Source: {article['source']} ({article['source_type']})")
-            logger.info(f"     Category: {article['category']}")
+            logger.info("  %s. %s...", i, article.get("title", "No title")[:60])
+            logger.info("     Source: %s (%s)", article.get("source", "Unknown"), article.get("source_type", "unknown"))
+            logger.info("     Category: %s", article.get("category", "Unknown"))
 
         return articles
 
     except Exception as e:
-        logger.error(f"❌ Error during news collection: {e}")
+        logger.error("❌ Error during news collection: %s", e)
         return []
 
 
-def create_tldr_summaries(summarizer, articles: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+def create_tldr_summaries(
+    content_processing_service: ContentProcessingService, articles: List[Dict[str, Any]]
+) -> List[Dict[str, Any]]:
     """
-    Create TLDR summaries for collected articles.
+    Create TLDR summaries using the ContentProcessingService.
 
     Args:
-        summarizer: TLDR summarizer instance
+        content_processing_service: Content processing service instance
         articles: List of news articles
 
     Returns:
@@ -133,44 +110,57 @@ def create_tldr_summaries(summarizer, articles: List[Dict[str, Any]]) -> List[Di
     try:
         logger.info("🧠 Starting TLDR summarization...")
 
-        if not summarizer.is_available():
-            logger.warning("⚠️ TLDR summarizer not available - using fallback mode")
+        if not content_processing_service.is_available():
+            logger.error("❌ Content processing service not available")
+            return []
 
-        summaries = []
-        total_articles = len(articles)
+        # Use the service to process and rank articles, then create summaries
+        # First rerank articles to prioritize NewsAPI over ArXiv
+        ranked_articles = content_processing_service.rerank_articles(articles, strategy="smart")
 
-        for i, article in enumerate(articles, 1):
-            try:
-                logger.info(f"  Processing {i}/{total_articles}: {article['title'][:50]}...")
+        # Create summaries with individual strategy
+        summaries = content_processing_service.summarize_with_strategy(articles=ranked_articles, strategy="individual")
 
-                # Create TLDR summary for the article
-                article_tldr = summarizer.create_article_tldr(article)
+        if not summaries:
+            logger.warning("⚠️ No summaries created")
+            return []
 
-                # Convert to summary dict
-                summary = {
-                    "title": article["title"],
-                    "source": article["source"],
-                    "category": article["category"],
-                    "url": article["url"],
-                    "tldr": article_tldr.tldr_text,
-                    "key_points": article_tldr.key_points,
-                    "impact_level": article_tldr.impact_level,
-                    "reading_time": article_tldr.reading_time,
-                    "model_used": article_tldr.model_used,
-                }
-
-                summaries.append(summary)
-                logger.info(f"    ✅ Summary created using {article_tldr.model_used}")
-
-            except Exception as e:
-                logger.warning(f"    ⚠️ Error creating summary for article {i}: {e}")
+        # Convert to summary dicts for Slack formatting
+        summary_dicts = []
+        for i, summary in enumerate(summaries):
+            if summary is None:
+                logger.warning("    ⚠️ Summary %s is None, skipping", i + 1)
                 continue
 
-        logger.info(f"✅ Successfully created {len(summaries)} TLDR summaries")
-        return summaries
+            try:
+                # Get the corresponding ranked article data for metadata
+                # Summaries are created from ranked_articles, so we need to use the same index
+                original_article = ranked_articles[i] if i < len(ranked_articles) else {}
+
+                summary_dict = {
+                    "title": original_article.get("title", "Unknown"),
+                    "source": original_article.get("source", "Unknown"),
+                    "category": (
+                        summary.categories[0] if summary.categories else "Unknown"
+                    ),  # Use LLM-generated category
+                    "url": original_article.get("url", ""),
+                    "tldr": summary.tldr_text,
+                    "key_points": summary.key_points,
+                    "impact_level": summary.impact_level,
+                    "reading_time": summary.reading_time,
+                    "model_used": summary.model_used,
+                }
+                summary_dicts.append(summary_dict)
+
+            except Exception as e:
+                logger.warning("    ⚠️ Error processing summary %s: %s", i + 1, e)
+                continue
+
+        logger.info("✅ Successfully created %s TLDR summaries", len(summary_dicts))
+        return summary_dicts
 
     except Exception as e:
-        logger.error(f"❌ Error during TLDR summarization: {e}")
+        logger.error("❌ Error during TLDR summarization: %s", e)
         return []
 
 
@@ -208,13 +198,15 @@ def create_slack_message(summaries: List[Dict[str, Any]]) -> SlackMessage:
             title = summary.get("title", "Unknown Title")
             tldr_text = summary.get("tldr", "No summary available")
             url = summary.get("url", "#")
+            source = summary.get("source", "Unknown Source")
+            category = summary.get("category", "Unknown Category")
 
             blocks.append(
                 {
                     "type": "section",
                     "text": {
                         "type": "mrkdwn",
-                        "text": f"*{i}. {title}*\n{tldr_text}\n<{url}|Read more>",
+                        "text": f"*{i}. {title}*\n{tldr_text}\n\n📰 *Source:* {source} | 🏷️ *Category:* {category}\n<{url}|Read more>",
                     },
                 }
             )
@@ -240,20 +232,22 @@ def create_slack_message(summaries: List[Dict[str, Any]]) -> SlackMessage:
             text=f"🚀 AI/ML News TLDR - {len(summaries)} articles summarized", blocks=blocks, attachments=[]
         )
 
-        logger.info(f"✅ Slack message created with {len(blocks)} blocks")
+        logger.info("✅ Slack message created with %s blocks", len(blocks))
         return message
 
     except Exception as e:
-        logger.error(f"❌ Error creating Slack message: {e}")
+        logger.error("❌ Error creating Slack message: %s", e)
         raise
 
 
-def publish_to_slack(publisher, message: SlackMessage, channel: str) -> bool:
+def publish_to_channels(
+    publisher_service: PublisherService, message: SlackMessage, channel: str, dry_run: bool = False
+) -> bool:
     """
-    Publish the Slack message.
+    Publish the Slack message using the PublisherService.
 
     Args:
-        publisher: Slack publisher instance
+        publisher_service: Publisher service instance
         message: Slack message to publish
         channel: Target Slack channel
 
@@ -263,26 +257,28 @@ def publish_to_slack(publisher, message: SlackMessage, channel: str) -> bool:
     logger = logging.getLogger(__name__)
 
     try:
-        logger.info(f"📤 Publishing to Slack channel {channel}...")
+        if dry_run:
+            logger.info("🔍 DRY RUN: Would publish to Slack")
+            logger.info("   Channel: %s", channel)
+            logger.info("   Message blocks: %s", len(message.blocks))
+            return True
 
-        if not publisher.is_available():
-            logger.error("❌ Slack publisher not available")
-            return False
+        logger.info("📤 Publishing to Slack channel %s...", channel)
 
-        # Publish the message
-        result = publisher.publish_tldr_message(message, channel=channel)
+        # Use the service to publish the message
+        result = publisher_service.publish_message(message=message, platform="slack", channel=channel)
 
         if result.get("success"):
             logger.info("🎉 Successfully published to Slack!")
-            logger.info(f"📺 Channel: {channel}")
-            logger.info(f"🆔 Message ID: {result.get('message_id', 'Unknown')}")
+            logger.info("📺 Channel: %s", channel)
+            logger.info("🆔 Message ID: %s", result.get("message_id", "Unknown"))
             return True
         else:
-            logger.error(f"❌ Failed to publish: {result.get('error', 'Unknown error')}")
+            logger.error("❌ Failed to publish: %s", result.get("error", "Unknown error"))
             return False
 
     except Exception as e:
-        logger.error(f"❌ Error publishing to Slack: {e}")
+        logger.error("❌ Error publishing to Slack: %s", e)
         return False
 
 
@@ -307,33 +303,34 @@ def run_briefly_bot(
         logger.info("🚀 Starting Briefly Bot...")
         logger.info("=" * 60)
 
-        # Step 1: Initialize components
-        logger.info("🔧 Initializing components...")
+        # Step 1: Initialize services
+        logger.info("🔧 Initializing services...")
 
-        collector = create_api_collector()
-        if not collector.is_available():
-            logger.error("❌ Failed to initialize news collector")
+        aggregation_service = AggregationService()
+        if not aggregation_service.is_healthy():
+            logger.error("❌ Failed to initialize AggregationService")
             return False
 
-        summarizer = create_tldr_summarizer(llm_provider=llm_provider)
-        if not summarizer.is_available():
-            logger.warning(f"⚠️ {llm_provider.upper()} TLDR summarizer not available - will use fallback mode")
+        content_processing_service = ContentProcessingService(llm_provider=llm_provider)
+        if not content_processing_service.is_healthy():
+            logger.error("❌ Failed to initialize ContentProcessingService with %s", llm_provider)
+            return False
 
-        publisher = create_slack_publisher()
-        if not publisher.is_available():
+        publisher_service = PublisherService(default_platform="slack")
+        if not publisher_service.is_healthy():
             if dry_run:
-                logger.warning("⚠️ Slack publisher not available - dry run will test collection and summarization only")
+                logger.warning("⚠️ PublisherService not available - dry run will test collection and summarization only")
             else:
-                logger.error("❌ Failed to initialize Slack publisher")
+                logger.error("❌ Failed to initialize PublisherService")
                 return False
 
-        logger.info("✅ All components initialized successfully")
+        logger.info("✅ All services initialized successfully")
 
         # Step 2: Collect news
         logger.info("\n📰 Step 2: Collecting News")
         logger.info("-" * 40)
 
-        articles = collect_news(collector, max_articles)
+        articles = collect_news(aggregation_service, max_articles)
         if not articles:
             logger.error("❌ No articles collected - stopping")
             return False
@@ -342,7 +339,7 @@ def run_briefly_bot(
         logger.info("\n🧠 Step 3: Creating TLDR Summaries")
         logger.info("-" * 40)
 
-        summaries = create_tldr_summaries(summarizer, articles)
+        summaries = create_tldr_summaries(content_processing_service, articles)
         if not summaries:
             logger.error("❌ No summaries created - stopping")
             return False
@@ -353,38 +350,34 @@ def run_briefly_bot(
 
         message = create_slack_message(summaries)
 
-        # Step 5: Publish to Slack (if not dry run)
-        if dry_run:
-            logger.info("\n🧪 DRY RUN: Would publish to Slack")
-            logger.info(f"📝 Message text: {message.text[:100]}...")
-            logger.info(f"🧱 Blocks: {len(message.blocks)}")
-            logger.info("✅ Dry run completed successfully")
+        # Step 5: Publish to Slack
+        logger.info("\n📤 Step 5: Publishing to Slack")
+        logger.info("-" * 40)
+
+        # Use provided channel or default from env
+        target_channel = channel or os.getenv("SLACK_CHANNEL_ID")
+        if not target_channel:
+            logger.error("❌ No Slack channel specified")
+            return False
+
+        success = publish_to_channels(publisher_service, message, target_channel, dry_run)
+
+        if success:
+            logger.info("\n🎉 Briefly Bot completed successfully!")
+            logger.info("📊 Summary:")
+            logger.info("  • Articles collected: %s", len(articles))
+            logger.info("  • TLDR summaries created: %s", len(summaries))
+            if not dry_run:
+                logger.info("  • Published to Slack: %s", target_channel)
+            else:
+                logger.info("  • Published to Slack: DRY RUN")
             return True
         else:
-            logger.info("\n📤 Step 5: Publishing to Slack")
-            logger.info("-" * 40)
-
-            # Use provided channel or default from env
-            target_channel = channel or os.getenv("SLACK_CHANNEL_ID")
-            if not target_channel:
-                logger.error("❌ No Slack channel specified")
-                return False
-
-            success = publish_to_slack(publisher, message, target_channel)
-
-            if success:
-                logger.info("\n🎉 Briefly Bot completed successfully!")
-                logger.info("📊 Summary:")
-                logger.info(f"  • Articles collected: {len(articles)}")
-                logger.info(f"  • TLDR summaries created: {len(summaries)}")
-                logger.info(f"  • Published to Slack: {target_channel}")
-                return True
-            else:
-                logger.error("❌ Briefly Bot failed during Slack publishing")
-                return False
+            logger.error("❌ Briefly Bot failed during Slack publishing")
+            return False
 
     except Exception as e:
-        logger.error(f"❌ Unexpected error in Briefly Bot: {e}")
+        logger.error("❌ Unexpected error in Briefly Bot: %s", e)
         import traceback
 
         traceback.print_exc()
@@ -434,11 +427,11 @@ Examples:
     # Print startup banner
     logger.info("🚀 Briefly Bot - AI/ML News Aggregator")
     logger.info("=" * 50)
-    logger.info(f"📅 Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    logger.info(f"🔧 Dry run: {'Yes' if args.dry_run else 'No'}")
-    logger.info(f"📊 Max articles: {args.max_articles}")
-    logger.info(f"🧠 LLM Provider: {args.llm_provider}")
-    logger.info(f"📺 Target channel: {args.channel or os.getenv('SLACK_CHANNEL_ID', 'Not specified')}")
+    logger.info("📅 Started at: %s", datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    logger.info("🔧 Dry run: %s", "Yes" if args.dry_run else "No")
+    logger.info("📊 Max articles: %s", args.max_articles)
+    logger.info("🧠 LLM Provider: %s", args.llm_provider)
+    logger.info("📺 Target channel: %s", args.channel or os.getenv("SLACK_CHANNEL_ID", "Not specified"))
     logger.info("=" * 50)
 
     # Check environment variables
@@ -446,7 +439,7 @@ Examples:
     missing_vars = [var for var in required_env_vars if not os.getenv(var)]
 
     if missing_vars:
-        logger.error(f"❌ Missing required environment variables: {', '.join(missing_vars)}")
+        logger.error("❌ Missing required environment variables: %s", ", ".join(missing_vars))
         return 1
 
     # Check Slack variables for non-dry-run
@@ -454,11 +447,12 @@ Examples:
     missing_slack_vars = [var for var in slack_vars if not os.getenv(var)]
 
     if missing_slack_vars and not args.dry_run:
-        logger.error(f"❌ Cannot run without Slack environment variables: {', '.join(missing_slack_vars)}")
+        logger.error("❌ Cannot run without Slack environment variables: %s", ", ".join(missing_slack_vars))
         return 1
     elif missing_slack_vars and args.dry_run:
         logger.warning(
-            f"⚠️ Missing Slack environment variables: {', '.join(missing_slack_vars)} - dry run will test collection and summarization only"
+            "⚠️ Missing Slack environment variables: %s - dry run will test collection and summarization only",
+            ", ".join(missing_slack_vars),
         )
 
     # Run the bot

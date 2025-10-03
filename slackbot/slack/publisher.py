@@ -1,13 +1,10 @@
 """Slack publisher for sending TLDR news summaries to Slack channels."""
 
-import os
 import logging
-from typing import Optional, Dict, Any, List
-from datetime import datetime
+from typing import Optional, Dict, Any
 
 try:
     from slack_bolt import App
-    from slack_bolt.adapter.socket_mode import SocketModeHandler
     from slack_sdk.errors import SlackApiError
 except ImportError:
     logging.error("slack-bolt not available. Install with: pip install slack-bolt")
@@ -24,9 +21,7 @@ logger = logging.getLogger(__name__)
 class SlackPublisher:
     """Publishes TLDR news summaries to Slack channels."""
 
-    def __init__(
-        self, bot_token: Optional[str] = None, app_token: Optional[str] = None
-    ):
+    def __init__(self, bot_token: Optional[str] = None, app_token: Optional[str] = None):
         self.bot_token = bot_token or SLACK_CONFIG["bot_token"]
         self.app_token = app_token or SLACK_CONFIG["app_token"]
         self.default_channel = SLACK_CONFIG["default_channel"]
@@ -42,11 +37,12 @@ class SlackPublisher:
             self.client = self.app.client
             logger.info("Slack publisher initialized successfully")
         except Exception as e:
-            logger.error(f"Failed to initialize Slack app: {e}")
+            logger.error("Failed to initialize Slack app: %s", e)
             self.app = None
             self.client = None
 
     def is_available(self) -> bool:
+        """Check if the Slack publisher is available."""
         return self.client is not None and self.bot_token is not None
 
     def publish_tldr_message(
@@ -57,9 +53,7 @@ class SlackPublisher:
     ) -> Dict[str, Any]:
         """Publish a TLDR message to Slack."""
         if not self.is_available():
-            error_msg = (
-                "Slack publisher not available - check bot token and configuration"
-            )
+            error_msg = "Slack publisher not available - check bot token and configuration"
             logger.error(error_msg)
             return {"error": error_msg, "success": False}
 
@@ -79,7 +73,7 @@ class SlackPublisher:
             response = self.client.chat_postMessage(**payload)
 
             if response["ok"]:
-                logger.info(f"TLDR message published to {target_channel}")
+                logger.info("TLDR message published to %s", target_channel)
                 return {
                     "success": True,
                     "channel": target_channel,
@@ -167,9 +161,7 @@ class SlackPublisher:
                     "channel_name": channel_info.get("name"),
                     "member_count": channel_info.get("num_members", 0),
                     "topic": channel_info.get("topic", {}).get("value", "No topic set"),
-                    "purpose": channel_info.get("purpose", {}).get(
-                        "value", "No purpose set"
-                    ),
+                    "purpose": channel_info.get("purpose", {}).get("value", "No purpose set"),
                     "is_private": channel_info.get("is_private", False),
                     "is_archived": channel_info.get("is_archived", False),
                     "response": response,
@@ -194,8 +186,6 @@ class SlackPublisher:
             }
 
 
-def create_slack_publisher(
-    bot_token: Optional[str] = None, app_token: Optional[str] = None
-) -> SlackPublisher:
+def create_slack_publisher(bot_token: Optional[str] = None, app_token: Optional[str] = None) -> SlackPublisher:
     """Factory function to create a Slack publisher instance."""
     return SlackPublisher(bot_token=bot_token, app_token=app_token)

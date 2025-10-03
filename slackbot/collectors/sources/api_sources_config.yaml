@@ -2,6 +2,51 @@
 # This file configures the sources for the API News Collector
 
 sources:
+  # NewsAPI sources for general news
+  - name: "Tech News AI"
+    source_type: "newsapi"
+    enabled: true
+    max_items: 15
+    update_interval: 3600
+    query: "AI"
+    category: "technology"
+    language: "en"
+    country: "us"
+    last_fetch: null
+
+  - name: "Business AI News"
+    source_type: "newsapi"
+    enabled: true
+    max_items: 10
+    update_interval: 3600
+    query: "AI"
+    category: "business"
+    language: "en"
+    country: "us"
+    last_fetch: null
+
+  - name: "Science AI News"
+    source_type: "newsapi"
+    enabled: true
+    max_items: 10
+    update_interval: 3600
+    query: "AI"
+    category: "science"
+    language: "en"
+    country: "us"
+    last_fetch: null
+
+  - name: "Health AI News"
+    source_type: "newsapi"
+    enabled: true
+    max_items: 10
+    update_interval: 3600
+    query: "AI"
+    category: "health"
+    language: "en"
+    country: "us"
+    last_fetch: null
+
   # ArXiv sources for research papers
   - name: "ArXiv AI Papers"
     source_type: "arxiv"
@@ -49,51 +94,6 @@ sources:
     sort_by: "submittedDate"
     sort_order: "descending"
     category: "Robotics"
-    last_fetch: null
-
-  # NewsAPI sources for general news
-  - name: "Tech News AI"
-    source_type: "newsapi"
-    enabled: true
-    max_items: 15
-    update_interval: 3600
-    query: "AI"
-    category: "technology"
-    language: "en"
-    country: "us"
-    last_fetch: null
-
-  - name: "Business AI News"
-    source_type: "newsapi"
-    enabled: true
-    max_items: 10
-    update_interval: 3600
-    query: "AI"
-    category: "business"
-    language: "en"
-    country: "us"
-    last_fetch: null
-
-  - name: "Science AI News"
-    source_type: "newsapi"
-    enabled: true
-    max_items: 10
-    update_interval: 3600
-    query: "AI"
-    category: "science"
-    language: "en"
-    country: "us"
-    last_fetch: null
-
-  - name: "Health AI News"
-    source_type: "newsapi"
-    enabled: true
-    max_items: 10
-    update_interval: 3600
-    query: "AI"
-    category: "health"
-    language: "en"
-    country: "us"
     last_fetch: null
 
 # Global settings

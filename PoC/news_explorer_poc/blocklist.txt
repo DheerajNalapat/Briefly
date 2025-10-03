@@ -1,7 +1,0 @@
-# Domains to skip (one per line)
-facebook.com
-x.com
-twitter.com
-t.co
-reddit.com
-medium.com/@

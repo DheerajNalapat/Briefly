@@ -6,6 +6,7 @@ from typing import List, Optional
 from datetime import datetime
 from dataclasses import dataclass
 from pydantic import BaseModel, Field
+from .categories import ArticleCategory
 
 
 @dataclass
@@ -45,24 +46,14 @@ class SlackMessage(BaseModel):
 class DailyDigestTLDR(BaseModel):
     """Structured TLDR output for daily digest summaries."""
 
-    tldr_summary: str = Field(
-        description="A concise 2-3 sentence TLDR of the day's most important AI/ML news"
-    )
-    top_headlines: List[str] = Field(
-        description="List of 3-5 most important headlines in TLDR format"
-    )
-    trending_topics: List[str] = Field(
-        description="List of 3-5 trending topics or emerging patterns"
-    )
+    tldr_summary: str = Field(description="A concise 2-3 sentence TLDR of the day's most important AI/ML news")
+    top_headlines: List[str] = Field(description="List of 3-5 most important headlines in TLDR format")
+    trending_topics: List[str] = Field(description="List of 3-5 trending topics or emerging patterns")
     impact_assessment: str = Field(
         description="Brief assessment of potential impact (High/Medium/Low) with 1 sentence explanation"
     )
-    must_read: List[str] = Field(
-        description="List of 2-3 most important articles to read with brief reason why"
-    )
-    slack_format: str = Field(
-        description="Pre-formatted Slack message with emojis and proper formatting"
-    )
+    must_read: List[str] = Field(description="List of 2-3 most important articles to read with brief reason why")
+    slack_format: str = Field(description="Pre-formatted Slack message with emojis and proper formatting")
 
 
 class ArticleTLDR(BaseModel):
@@ -70,10 +61,7 @@ class ArticleTLDR(BaseModel):
 
     tldr: str = Field(description="2-3 sentence TLDR summary of the article")
     key_facts: List[str] = Field(description="3-5 key facts or takeaways")
-    why_matters: str = Field(
-        description="1-2 sentences explaining why this matters to AI/ML professionals"
-    )
+    why_matters: str = Field(description="1-2 sentences explaining why this matters to AI/ML professionals")
     reading_time: str = Field(description="Estimated reading time (e.g., '2 min read')")
-    difficulty: str = Field(
-        description="Content difficulty level: 'Beginner', 'Intermediate', or 'Advanced'"
-    )
+    difficulty: str = Field(description="Content difficulty level: 'Beginner', 'Intermediate', or 'Advanced'")
+    category: str = Field(description="Primary category for this article from the predefined list")
