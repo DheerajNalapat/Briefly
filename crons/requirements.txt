@@ -1,0 +1,32 @@
+# Briefly Bot - Cron Job Requirements
+# Python packages required for the cron job functionality
+
+# Core dependencies
+feedparser==6.0.10
+requests==2.31.0
+python-dotenv==1.0.0
+html2text==2020.1.16
+
+# News API
+newsapi-python==0.2.7
+
+# ArXiv integration
+arxiv==2.1.0
+
+# AI/ML dependencies
+langchain==0.1.0
+langchain-openai==0.0.5
+langchain-google-genai==0.0.6
+
+# Slack integration
+slack-bolt==1.18.1
+slack-sdk==3.26.1
+
+# Data handling
+pydantic==2.5.0
+httpx==0.25.2
+
+# Optional: For better performance
+aiohttp==3.9.1
+asyncio-throttle==1.0.2
+

@@ -1,0 +1,10 @@
+2025-10-03 23:59:37,496 - __main__ - INFO - Briefly Bot Server logging initialized
+2025-10-03 23:59:37,496 - __main__ - INFO - 🚀 Briefly Bot Server - Slack Event Listener
+2025-10-03 23:59:37,496 - __main__ - INFO - ============================================================
+2025-10-03 23:59:37,497 - __main__ - INFO - 📅 Started at: 2025-10-03 23:59:37
+2025-10-03 23:59:37,497 - __main__ - INFO - 🔧 Verbose logging: No
+2025-10-03 23:59:37,497 - __main__ - INFO - 🔧 Dry run: Yes
+2025-10-03 23:59:37,497 - __main__ - INFO - ============================================================
+2025-10-03 23:59:37,497 - __main__ - INFO - 🔧 Validating configuration...
+2025-10-03 23:59:37,497 - __main__ - INFO - ✅ Configuration validation passed
+2025-10-03 23:59:37,497 - __main__ - INFO - 🔍 DRY RUN: Configuration is valid, server would start successfully

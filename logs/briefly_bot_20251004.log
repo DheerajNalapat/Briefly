@@ -1,0 +1,242 @@
+2025-10-04 00:17:39,364 - __main__ - INFO - Briefly Bot logging initialized
+2025-10-04 00:17:39,364 - __main__ - INFO - 🚀 Briefly Bot - AI/ML News Aggregator
+2025-10-04 00:17:39,364 - __main__ - INFO - ==================================================
+2025-10-04 00:17:39,364 - __main__ - INFO - 📅 Started at: 2025-10-04 00:17:39
+2025-10-04 00:17:39,364 - __main__ - INFO - 🔧 Dry run: Yes
+2025-10-04 00:17:39,364 - __main__ - INFO - 📊 Max articles: 3
+2025-10-04 00:17:39,364 - __main__ - INFO - 🧠 LLM Provider: openai
+2025-10-04 00:17:39,364 - __main__ - INFO - 📺 Target channel: C09AUAZCQR1
+2025-10-04 00:17:39,364 - __main__ - INFO - ==================================================
+2025-10-04 00:17:39,364 - __main__ - INFO - 🚀 Starting Briefly Bot...
+2025-10-04 00:17:39,364 - __main__ - INFO - ============================================================
+2025-10-04 00:17:39,364 - __main__ - INFO - 🔧 Initializing services...
+2025-10-04 00:17:39,364 - slackbot.services.aggregation_service - INFO - Initializing AggregationService
+2025-10-04 00:17:39,364 - slackbot.collectors.base_collector - INFO - Initialized collector: ArXiv Collector
+2025-10-04 00:17:39,364 - slackbot.collectors.arxiv_collector - INFO - Loaded 4 ArXiv sources
+2025-10-04 00:17:39,365 - slackbot.collectors.arxiv_collector - INFO - ArXiv client available
+2025-10-04 00:17:39,365 - slackbot.services.aggregation_service - INFO - ✅ ArXiv collector initialized successfully
+2025-10-04 00:17:39,365 - slackbot.collectors.base_collector - INFO - Initialized collector: NewsAPI Collector
+2025-10-04 00:17:39,365 - slackbot.collectors.newsapi_org_collector - INFO - Loaded 5 NewsAPI sources with comprehensive query params
+2025-10-04 00:17:39,365 - slackbot.collectors.newsapi_org_collector - INFO - NewsAPI client initialized successfully
+2025-10-04 00:17:39,365 - slackbot.services.aggregation_service - INFO - ✅ NewsAPI collector initialized successfully
+2025-10-04 00:17:39,365 - slackbot.collectors.base_collector - INFO - Initialized collector: RSS Collector
+2025-10-04 00:17:39,365 - slackbot.collectors.rss_collector - INFO - 📡 Loaded 30 default RSS sources
+2025-10-04 00:17:39,365 - slackbot.collectors.rss_collector - INFO - ✅ RSS Collector initialized with 30 sources
+2025-10-04 00:17:39,365 - slackbot.services.aggregation_service - INFO - ✅ RSS collector initialized successfully
+2025-10-04 00:17:39,365 - slackbot.collectors.base_collector - INFO - Initialized CollectorManager
+2025-10-04 00:17:39,365 - slackbot.services.aggregation_service - INFO - 📊 AggregationService initialized with 3 collectors
+2025-10-04 00:17:39,365 - slackbot.services.summarizer_service - INFO - Initializing ContentProcessingService with provider: openai
+2025-10-04 00:17:39,653 - slackbot.summarizer.tldr_summarizer - INFO - Initialized OpenAI TLDR summarizer with model: gpt-3.5-turbo
+2025-10-04 00:17:39,665 - slackbot.summarizer.tldr_summarizer - INFO - Initialized Gemini fallback with model: gemini-1.5-flash
+2025-10-04 00:17:39,665 - slackbot.services.summarizer_service - INFO - ✅ Summarizer initialized successfully with openai
+2025-10-04 00:17:39,666 - slackbot.utils.reranker - INFO - Initializing ArticleReranker
+2025-10-04 00:17:39,666 - slackbot.services.summarizer_service - INFO - ✅ Article reranker initialized successfully
+2025-10-04 00:17:39,666 - slackbot.services.publisher_service - INFO - Initializing PublisherService with default platform: slack
+2025-10-04 00:17:40,595 - slackbot.slack.publisher - INFO - Slack publisher initialized successfully
+2025-10-04 00:17:40,595 - slackbot.services.publisher_service - INFO - ✅ Slack publisher initialized successfully
+2025-10-04 00:17:40,595 - slackbot.services.publisher_service - INFO - 📤 PublisherService initialized with 1 publishers
+2025-10-04 00:17:40,595 - __main__ - INFO - ✅ All services initialized successfully
+2025-10-04 00:17:40,596 - __main__ - INFO - 
+📰 Step 2: Collecting News
+2025-10-04 00:17:40,596 - __main__ - INFO - ----------------------------------------
+2025-10-04 00:17:40,596 - __main__ - INFO - 🔍 Starting news collection...
+2025-10-04 00:17:40,596 - slackbot.services.aggregation_service - INFO - 🎯 Collecting 3 articles with prioritized sources (NewsAPI → RSS → ArXiv)
+2025-10-04 00:17:40,596 - slackbot.services.aggregation_service - INFO - 🧹 Cleared NewsAPI cache for fresh collection
+2025-10-04 00:17:40,597 - slackbot.services.aggregation_service - INFO - 🔍 Collecting from newsapi
+2025-10-04 00:17:40,597 - slackbot.collectors.newsapi_org_collector - INFO - NewsAPI params for Technical AI News: {'q': 'AI model breakthrough OR AI research advancement OR language model improvement', 'language': 'en', 'country': 'us', 'page_size': 10}
+2025-10-04 00:17:41,252 - slackbot.collectors.newsapi_org_collector - INFO - NewsAPI response for Technical AI News: status=ok, totalResults=285, articles=10
+2025-10-04 00:17:41,253 - slackbot.collectors.newsapi_org_collector - INFO - Fetched 10 articles from Technical AI News
+2025-10-04 00:17:41,254 - slackbot.collectors.newsapi_org_collector - INFO - NewsAPI params for Industry AI News: {'q': 'AI business news OR AI company announcement OR AI industry update', 'language': 'en', 'country': 'us', 'page_size': 10}
+2025-10-04 00:17:42,884 - slackbot.collectors.newsapi_org_collector - INFO - NewsAPI response for Industry AI News: status=ok, totalResults=485, articles=10
+2025-10-04 00:17:42,884 - slackbot.collectors.newsapi_org_collector - INFO - Fetched 9 articles from Industry AI News
+2025-10-04 00:17:42,885 - slackbot.collectors.newsapi_org_collector - INFO - NewsAPI params for Applications AI News: {'q': 'AI implementation success OR AI use case OR AI solution deployment', 'language': 'en', 'country': 'us', 'page_size': 10}
+2025-10-04 00:17:43,550 - slackbot.collectors.newsapi_org_collector - INFO - NewsAPI response for Applications AI News: status=ok, totalResults=152, articles=10
+2025-10-04 00:17:43,550 - slackbot.collectors.newsapi_org_collector - INFO - Fetched 10 articles from Applications AI News
+2025-10-04 00:17:43,551 - slackbot.collectors.newsapi_org_collector - INFO - NewsAPI params for Economic AI News: {'q': 'AI economic impact OR AI job market OR AI workforce changes', 'language': 'en', 'country': 'us', 'page_size': 10}
+2025-10-04 00:17:44,197 - slackbot.collectors.newsapi_org_collector - INFO - NewsAPI response for Economic AI News: status=ok, totalResults=66, articles=10
+2025-10-04 00:17:44,197 - slackbot.collectors.newsapi_org_collector - INFO - Fetched 9 articles from Economic AI News
+2025-10-04 00:17:44,198 - slackbot.collectors.newsapi_org_collector - INFO - NewsAPI params for Infrastructure AI News: {'q': 'AI chip development OR AI hardware OR AI infrastructure news', 'language': 'en', 'country': 'us', 'page_size': 10}
+2025-10-04 00:17:44,711 - slackbot.collectors.newsapi_org_collector - INFO - NewsAPI response for Infrastructure AI News: status=ok, totalResults=260, articles=9
+2025-10-04 00:17:44,711 - slackbot.collectors.newsapi_org_collector - INFO - Fetched 8 articles from Infrastructure AI News
+2025-10-04 00:17:44,712 - slackbot.collectors.newsapi_org_collector - INFO - Collected 46 total articles from NewsAPI Collector
+2025-10-04 00:17:44,712 - slackbot.services.aggregation_service - INFO - ✅ Collected 46 articles from newsapi
+2025-10-04 00:17:44,712 - slackbot.services.aggregation_service - INFO - 📊 newsapi: collected 46 articles (remaining: -43)
+2025-10-04 00:17:44,712 - slackbot.services.aggregation_service - INFO - ✅ Prioritized collection complete: 3 articles (NewsAPI → RSS → ArXiv)
+2025-10-04 00:17:44,712 - __main__ - INFO - ✅ Successfully collected 3 articles
+2025-10-04 00:17:44,712 - __main__ - INFO -   1. The Missing Link In Learning Strategy? Advanced Facilitation...
+2025-10-04 00:17:44,712 - __main__ - INFO -      Source: Technical AI News (newsapi)
+2025-10-04 00:17:44,712 - __main__ - INFO -      Category: General
+2025-10-04 00:17:44,712 - __main__ - INFO -   2. Extended Warranty Market Growth Analysis Report 2025-2034: E...
+2025-10-04 00:17:44,712 - __main__ - INFO -      Source: Technical AI News (newsapi)
+2025-10-04 00:17:44,712 - __main__ - INFO -      Category: General
+2025-10-04 00:17:44,712 - __main__ - INFO -   3. What Happens In The Amplify Stage Of HubSpot Loop Marketing?...
+2025-10-04 00:17:44,713 - __main__ - INFO -      Source: Technical AI News (newsapi)
+2025-10-04 00:17:44,713 - __main__ - INFO -      Category: General
+2025-10-04 00:17:44,713 - __main__ - INFO - 
+🧠 Step 3: Creating TLDR Summaries
+2025-10-04 00:17:44,713 - __main__ - INFO - ----------------------------------------
+2025-10-04 00:17:44,713 - __main__ - INFO - 🧠 Starting TLDR summarization...
+2025-10-04 00:17:44,713 - slackbot.services.summarizer_service - INFO - 🔄 Reranking 3 articles using strategy: smart
+2025-10-04 00:17:44,713 - slackbot.utils.reranker - INFO - 🔄 Reranking 3 articles using strategy: smart
+2025-10-04 00:17:44,719 - slackbot.utils.reranker - INFO - ✅ Reranking complete. Top article: newsapi - Technical AI News
+2025-10-04 00:17:44,719 - slackbot.services.summarizer_service - INFO - 📊 Reranking complete. Top source: newsapi
+2025-10-04 00:17:44,719 - slackbot.services.summarizer_service - INFO -   newsapi: 3 articles
+2025-10-04 00:17:44,719 - slackbot.services.summarizer_service - INFO - 🎯 Using summarization strategy: individual
+2025-10-04 00:17:44,719 - slackbot.services.summarizer_service - INFO - 📝 Batch summarizing 3 articles
+2025-10-04 00:17:44,719 - slackbot.services.summarizer_service - INFO -   Processing 1/3: What Happens In The Amplify Stage Of HubSpot Loop ...
+2025-10-04 00:17:44,719 - slackbot.services.summarizer_service - INFO - 📝 Creating TLDR for article: What Happens In The Amplify Stage Of HubSpot Loop ...
+2025-10-04 00:17:48,277 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-10-04 00:17:48,290 - slackbot.services.summarizer_service - INFO - ✅ TLDR created successfully for article
+2025-10-04 00:17:48,290 - slackbot.services.summarizer_service - INFO -     ✅ Summary created using openai
+2025-10-04 00:17:48,290 - slackbot.services.summarizer_service - INFO -   Processing 2/3: Extended Warranty Market Growth Analysis Report 20...
+2025-10-04 00:17:48,290 - slackbot.services.summarizer_service - INFO - 📝 Creating TLDR for article: Extended Warranty Market Growth Analysis Report 20...
+2025-10-04 00:17:51,327 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-10-04 00:17:51,472 - slackbot.services.summarizer_service - INFO - ✅ TLDR created successfully for article
+2025-10-04 00:17:51,472 - slackbot.services.summarizer_service - INFO -     ✅ Summary created using openai
+2025-10-04 00:17:51,472 - slackbot.services.summarizer_service - INFO -   Processing 3/3: The Missing Link In Learning Strategy? Advanced Fa...
+2025-10-04 00:17:51,472 - slackbot.services.summarizer_service - INFO - 📝 Creating TLDR for article: The Missing Link In Learning Strategy? Advanced Fa...
+2025-10-04 00:17:53,872 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-10-04 00:17:53,886 - slackbot.services.summarizer_service - INFO - ✅ TLDR created successfully for article
+2025-10-04 00:17:53,886 - slackbot.services.summarizer_service - INFO -     ✅ Summary created using openai
+2025-10-04 00:17:53,886 - slackbot.services.summarizer_service - INFO - ✅ Batch summarization complete: 3/3 successful
+2025-10-04 00:17:53,886 - __main__ - INFO - ✅ Successfully created 3 TLDR summaries
+2025-10-04 00:17:53,887 - __main__ - INFO - 
+💬 Step 4: Creating Slack Message
+2025-10-04 00:17:53,887 - __main__ - INFO - ----------------------------------------
+2025-10-04 00:17:53,887 - slackbot.utils.create_slack_message - INFO - 💬 Creating Slack message...
+2025-10-04 00:17:53,888 - slackbot.utils.create_slack_message - INFO - ✅ Slack message created with 9 blocks
+2025-10-04 00:17:53,888 - __main__ - INFO - 
+📤 Step 5: Publishing to Slack
+2025-10-04 00:17:53,888 - __main__ - INFO - ----------------------------------------
+2025-10-04 00:17:53,888 - __main__ - INFO - 🔍 DRY RUN: Would publish to Slack
+2025-10-04 00:17:53,889 - __main__ - INFO -    Channel: C09AUAZCQR1
+2025-10-04 00:17:53,889 - __main__ - INFO -    Message blocks: 9
+2025-10-04 00:17:53,889 - __main__ - INFO - 
+🎉 Briefly Bot completed successfully!
+2025-10-04 00:17:53,889 - __main__ - INFO - 📊 Summary:
+2025-10-04 00:17:53,890 - __main__ - INFO -   • Articles collected: 3
+2025-10-04 00:17:53,890 - __main__ - INFO -   • TLDR summaries created: 3
+2025-10-04 00:17:53,891 - __main__ - INFO -   • Published to Slack: DRY RUN
+2025-10-04 00:17:53,891 - __main__ - INFO - ✅ Briefly Bot completed successfully
+2025-10-04 00:25:34,631 - __main__ - INFO - Briefly Bot logging initialized
+2025-10-04 00:25:34,631 - __main__ - INFO - 🚀 Briefly Bot - AI/ML News Aggregator
+2025-10-04 00:25:34,631 - __main__ - INFO - ==================================================
+2025-10-04 00:25:34,632 - __main__ - INFO - 📅 Started at: 2025-10-04 00:25:34
+2025-10-04 00:25:34,632 - __main__ - INFO - 🔧 Dry run: Yes
+2025-10-04 00:25:34,632 - __main__ - INFO - 📊 Max articles: 3
+2025-10-04 00:25:34,632 - __main__ - INFO - 🧠 LLM Provider: openai
+2025-10-04 00:25:34,632 - __main__ - INFO - 📺 Target channel: C09AUAZCQR1
+2025-10-04 00:25:34,632 - __main__ - INFO - ==================================================
+2025-10-04 00:25:34,632 - slackbot.processors.news_processor - INFO - 🚀 Starting Briefly News Processing...
+2025-10-04 00:25:34,632 - slackbot.processors.news_processor - INFO - ============================================================
+2025-10-04 00:25:34,632 - slackbot.processors.news_processor - INFO - 🔧 Initializing services...
+2025-10-04 00:25:34,632 - slackbot.services.aggregation_service - INFO - Initializing AggregationService
+2025-10-04 00:25:34,633 - slackbot.collectors.base_collector - INFO - Initialized collector: ArXiv Collector
+2025-10-04 00:25:34,633 - slackbot.collectors.arxiv_collector - INFO - Loaded 4 ArXiv sources
+2025-10-04 00:25:34,633 - slackbot.collectors.arxiv_collector - INFO - ArXiv client available
+2025-10-04 00:25:34,633 - slackbot.services.aggregation_service - INFO - ✅ ArXiv collector initialized successfully
+2025-10-04 00:25:34,633 - slackbot.collectors.base_collector - INFO - Initialized collector: NewsAPI Collector
+2025-10-04 00:25:34,633 - slackbot.collectors.newsapi_org_collector - INFO - Loaded 5 NewsAPI sources with comprehensive query params
+2025-10-04 00:25:34,633 - slackbot.collectors.newsapi_org_collector - INFO - NewsAPI client initialized successfully
+2025-10-04 00:25:34,633 - slackbot.services.aggregation_service - INFO - ✅ NewsAPI collector initialized successfully
+2025-10-04 00:25:34,633 - slackbot.collectors.base_collector - INFO - Initialized collector: RSS Collector
+2025-10-04 00:25:34,633 - slackbot.collectors.rss_collector - INFO - 📡 Loaded 30 default RSS sources
+2025-10-04 00:25:34,633 - slackbot.collectors.rss_collector - INFO - ✅ RSS Collector initialized with 30 sources
+2025-10-04 00:25:34,633 - slackbot.services.aggregation_service - INFO - ✅ RSS collector initialized successfully
+2025-10-04 00:25:34,634 - slackbot.collectors.base_collector - INFO - Initialized CollectorManager
+2025-10-04 00:25:34,634 - slackbot.services.aggregation_service - INFO - 📊 AggregationService initialized with 3 collectors
+2025-10-04 00:25:34,634 - slackbot.services.summarizer_service - INFO - Initializing ContentProcessingService with provider: openai
+2025-10-04 00:25:34,926 - slackbot.summarizer.tldr_summarizer - INFO - Initialized OpenAI TLDR summarizer with model: gpt-3.5-turbo
+2025-10-04 00:25:34,938 - slackbot.summarizer.tldr_summarizer - INFO - Initialized Gemini fallback with model: gemini-1.5-flash
+2025-10-04 00:25:34,938 - slackbot.services.summarizer_service - INFO - ✅ Summarizer initialized successfully with openai
+2025-10-04 00:25:34,938 - slackbot.utils.reranker - INFO - Initializing ArticleReranker
+2025-10-04 00:25:34,939 - slackbot.services.summarizer_service - INFO - ✅ Article reranker initialized successfully
+2025-10-04 00:25:34,939 - slackbot.services.publisher_service - INFO - Initializing PublisherService with default platform: slack
+2025-10-04 00:25:35,499 - slackbot.slack.publisher - INFO - Slack publisher initialized successfully
+2025-10-04 00:25:35,499 - slackbot.services.publisher_service - INFO - ✅ Slack publisher initialized successfully
+2025-10-04 00:25:35,499 - slackbot.services.publisher_service - INFO - 📤 PublisherService initialized with 1 publishers
+2025-10-04 00:25:35,499 - slackbot.processors.news_processor - INFO - ✅ All services initialized successfully
+2025-10-04 00:25:35,499 - slackbot.processors.news_processor - INFO - 
+📰 Step 1: Collecting News
+2025-10-04 00:25:35,499 - slackbot.processors.news_processor - INFO - ----------------------------------------
+2025-10-04 00:25:35,500 - slackbot.processors.news_processor - INFO - 🔍 Starting news collection...
+2025-10-04 00:25:35,500 - slackbot.services.aggregation_service - INFO - 🎯 Collecting 3 articles with prioritized sources (NewsAPI → RSS → ArXiv)
+2025-10-04 00:25:35,500 - slackbot.services.aggregation_service - INFO - 🧹 Cleared NewsAPI cache for fresh collection
+2025-10-04 00:25:35,500 - slackbot.services.aggregation_service - INFO - 🔍 Collecting from newsapi
+2025-10-04 00:25:35,500 - slackbot.collectors.newsapi_org_collector - INFO - NewsAPI params for Technical AI News: {'q': 'AI model breakthrough OR AI research advancement OR language model improvement', 'language': 'en', 'country': 'us', 'page_size': 10}
+2025-10-04 00:25:36,025 - slackbot.collectors.newsapi_org_collector - INFO - NewsAPI response for Technical AI News: status=ok, totalResults=285, articles=10
+2025-10-04 00:25:36,026 - slackbot.collectors.newsapi_org_collector - INFO - Fetched 10 articles from Technical AI News
+2025-10-04 00:25:36,026 - slackbot.collectors.newsapi_org_collector - INFO - NewsAPI params for Industry AI News: {'q': 'AI business news OR AI company announcement OR AI industry update', 'language': 'en', 'country': 'us', 'page_size': 10}
+2025-10-04 00:25:36,492 - slackbot.collectors.newsapi_org_collector - INFO - NewsAPI response for Industry AI News: status=ok, totalResults=485, articles=10
+2025-10-04 00:25:36,492 - slackbot.collectors.newsapi_org_collector - INFO - Fetched 9 articles from Industry AI News
+2025-10-04 00:25:36,492 - slackbot.collectors.newsapi_org_collector - INFO - NewsAPI params for Applications AI News: {'q': 'AI implementation success OR AI use case OR AI solution deployment', 'language': 'en', 'country': 'us', 'page_size': 10}
+2025-10-04 00:25:37,092 - slackbot.collectors.newsapi_org_collector - INFO - NewsAPI response for Applications AI News: status=ok, totalResults=152, articles=10
+2025-10-04 00:25:37,092 - slackbot.collectors.newsapi_org_collector - INFO - Fetched 10 articles from Applications AI News
+2025-10-04 00:25:37,092 - slackbot.collectors.newsapi_org_collector - INFO - NewsAPI params for Economic AI News: {'q': 'AI economic impact OR AI job market OR AI workforce changes', 'language': 'en', 'country': 'us', 'page_size': 10}
+2025-10-04 00:25:37,690 - slackbot.collectors.newsapi_org_collector - INFO - NewsAPI response for Economic AI News: status=ok, totalResults=66, articles=10
+2025-10-04 00:25:37,690 - slackbot.collectors.newsapi_org_collector - INFO - Fetched 9 articles from Economic AI News
+2025-10-04 00:25:37,690 - slackbot.collectors.newsapi_org_collector - INFO - NewsAPI params for Infrastructure AI News: {'q': 'AI chip development OR AI hardware OR AI infrastructure news', 'language': 'en', 'country': 'us', 'page_size': 10}
+2025-10-04 00:25:38,216 - slackbot.collectors.newsapi_org_collector - INFO - NewsAPI response for Infrastructure AI News: status=ok, totalResults=260, articles=9
+2025-10-04 00:25:38,216 - slackbot.collectors.newsapi_org_collector - INFO - Fetched 8 articles from Infrastructure AI News
+2025-10-04 00:25:38,217 - slackbot.collectors.newsapi_org_collector - INFO - Collected 46 total articles from NewsAPI Collector
+2025-10-04 00:25:38,217 - slackbot.services.aggregation_service - INFO - ✅ Collected 46 articles from newsapi
+2025-10-04 00:25:38,217 - slackbot.services.aggregation_service - INFO - 📊 newsapi: collected 46 articles (remaining: -43)
+2025-10-04 00:25:38,218 - slackbot.services.aggregation_service - INFO - ✅ Prioritized collection complete: 3 articles (NewsAPI → RSS → ArXiv)
+2025-10-04 00:25:38,218 - slackbot.processors.news_processor - INFO - ✅ Successfully collected 3 articles
+2025-10-04 00:25:38,218 - slackbot.processors.news_processor - INFO -   1. The Missing Link In Learning Strategy? Advanced Facilitation...
+2025-10-04 00:25:38,218 - slackbot.processors.news_processor - INFO -      Source: Technical AI News (newsapi)
+2025-10-04 00:25:38,218 - slackbot.processors.news_processor - INFO -      Category: General
+2025-10-04 00:25:38,219 - slackbot.processors.news_processor - INFO -   2. Extended Warranty Market Growth Analysis Report 2025-2034: E...
+2025-10-04 00:25:38,219 - slackbot.processors.news_processor - INFO -      Source: Technical AI News (newsapi)
+2025-10-04 00:25:38,219 - slackbot.processors.news_processor - INFO -      Category: General
+2025-10-04 00:25:38,219 - slackbot.processors.news_processor - INFO -   3. What Happens In The Amplify Stage Of HubSpot Loop Marketing?...
+2025-10-04 00:25:38,219 - slackbot.processors.news_processor - INFO -      Source: Technical AI News (newsapi)
+2025-10-04 00:25:38,219 - slackbot.processors.news_processor - INFO -      Category: General
+2025-10-04 00:25:38,220 - slackbot.processors.news_processor - INFO - 
+🧠 Step 2: Creating TLDR Summaries
+2025-10-04 00:25:38,220 - slackbot.processors.news_processor - INFO - ----------------------------------------
+2025-10-04 00:25:38,220 - slackbot.processors.news_processor - INFO - 🧠 Starting TLDR summarization...
+2025-10-04 00:25:38,220 - slackbot.services.summarizer_service - INFO - 🔄 Reranking 3 articles using strategy: smart
+2025-10-04 00:25:38,220 - slackbot.utils.reranker - INFO - 🔄 Reranking 3 articles using strategy: smart
+2025-10-04 00:25:38,225 - slackbot.utils.reranker - INFO - ✅ Reranking complete. Top article: newsapi - Technical AI News
+2025-10-04 00:25:38,226 - slackbot.services.summarizer_service - INFO - 📊 Reranking complete. Top source: newsapi
+2025-10-04 00:25:38,226 - slackbot.services.summarizer_service - INFO -   newsapi: 3 articles
+2025-10-04 00:25:38,226 - slackbot.services.summarizer_service - INFO - 🎯 Using summarization strategy: individual
+2025-10-04 00:25:38,226 - slackbot.services.summarizer_service - INFO - 📝 Batch summarizing 3 articles
+2025-10-04 00:25:38,226 - slackbot.services.summarizer_service - INFO -   Processing 1/3: What Happens In The Amplify Stage Of HubSpot Loop ...
+2025-10-04 00:25:38,226 - slackbot.services.summarizer_service - INFO - 📝 Creating TLDR for article: What Happens In The Amplify Stage Of HubSpot Loop ...
+2025-10-04 00:25:41,458 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-10-04 00:25:41,487 - slackbot.services.summarizer_service - INFO - ✅ TLDR created successfully for article
+2025-10-04 00:25:41,487 - slackbot.services.summarizer_service - INFO -     ✅ Summary created using openai
+2025-10-04 00:25:41,487 - slackbot.services.summarizer_service - INFO -   Processing 2/3: Extended Warranty Market Growth Analysis Report 20...
+2025-10-04 00:25:41,488 - slackbot.services.summarizer_service - INFO - 📝 Creating TLDR for article: Extended Warranty Market Growth Analysis Report 20...
+2025-10-04 00:25:44,180 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-10-04 00:25:44,212 - slackbot.services.summarizer_service - INFO - ✅ TLDR created successfully for article
+2025-10-04 00:25:44,212 - slackbot.services.summarizer_service - INFO -     ✅ Summary created using openai
+2025-10-04 00:25:44,212 - slackbot.services.summarizer_service - INFO -   Processing 3/3: The Missing Link In Learning Strategy? Advanced Fa...
+2025-10-04 00:25:44,212 - slackbot.services.summarizer_service - INFO - 📝 Creating TLDR for article: The Missing Link In Learning Strategy? Advanced Fa...
+2025-10-04 00:25:45,730 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-10-04 00:25:45,732 - slackbot.services.summarizer_service - INFO - ✅ TLDR created successfully for article
+2025-10-04 00:25:45,732 - slackbot.services.summarizer_service - INFO -     ✅ Summary created using openai
+2025-10-04 00:25:45,732 - slackbot.services.summarizer_service - INFO - ✅ Batch summarization complete: 3/3 successful
+2025-10-04 00:25:45,732 - slackbot.processors.news_processor - INFO - ✅ Successfully created 3 TLDR summaries
+2025-10-04 00:25:45,732 - slackbot.processors.news_processor - INFO - 
+💬 Step 3: Creating Slack Message
+2025-10-04 00:25:45,732 - slackbot.processors.news_processor - INFO - ----------------------------------------
+2025-10-04 00:25:45,732 - slackbot.processors.news_processor - INFO - 💬 Creating Slack message...
+2025-10-04 00:25:45,733 - slackbot.utils.create_slack_message - INFO - 💬 Creating Slack message...
+2025-10-04 00:25:45,733 - slackbot.utils.create_slack_message - INFO - ✅ Slack message created with 9 blocks
+2025-10-04 00:25:45,733 - slackbot.processors.news_processor - INFO - 
+📤 Step 4: Publishing to Slack
+2025-10-04 00:25:45,733 - slackbot.processors.news_processor - INFO - ----------------------------------------
+2025-10-04 00:25:45,733 - slackbot.processors.news_processor - INFO - 🔍 DRY RUN: Would publish to Slack
+2025-10-04 00:25:45,733 - slackbot.processors.news_processor - INFO -    Channel: C09AUAZCQR1
+2025-10-04 00:25:45,733 - slackbot.processors.news_processor - INFO -    Message blocks: 9
+2025-10-04 00:25:45,733 - slackbot.processors.news_processor - INFO - 
+🎉 Briefly News Processing completed successfully!
+2025-10-04 00:25:45,733 - slackbot.processors.news_processor - INFO - 📊 Summary:
+2025-10-04 00:25:45,733 - slackbot.processors.news_processor - INFO -   • Articles collected: 3
+2025-10-04 00:25:45,734 - slackbot.processors.news_processor - INFO -   • TLDR summaries created: 3
+2025-10-04 00:25:45,734 - slackbot.processors.news_processor - INFO -   • Published to Slack: DRY RUN
+2025-10-04 00:25:45,734 - __main__ - INFO - ✅ Briefly Bot completed successfully
+2025-10-04 00:25:45,734 - __main__ - INFO - ✅ Briefly Bot completed successfully

@@ -1,0 +1,30 @@
+2025-10-04 00:10:56,844 - __main__ - INFO - Briefly Bot Server logging initialized
+2025-10-04 00:10:56,845 - __main__ - INFO - 🚀 Briefly Bot Server - Slack Event Listener
+2025-10-04 00:10:56,845 - __main__ - INFO - ============================================================
+2025-10-04 00:10:56,845 - __main__ - INFO - 📅 Started at: 2025-10-04 00:10:56
+2025-10-04 00:10:56,845 - __main__ - INFO - 🔧 Verbose logging: No
+2025-10-04 00:10:56,845 - __main__ - INFO - 🔧 Dry run: Yes
+2025-10-04 00:10:56,845 - __main__ - INFO - ============================================================
+2025-10-04 00:10:56,845 - __main__ - INFO - 🔧 Validating configuration...
+2025-10-04 00:10:56,845 - __main__ - INFO - ✅ Configuration validation passed
+2025-10-04 00:10:56,845 - __main__ - INFO - 🔍 DRY RUN: Configuration is valid, server would start successfully
+2025-10-04 00:18:17,934 - __main__ - INFO - Briefly Bot Server logging initialized
+2025-10-04 00:18:17,934 - __main__ - INFO - 🚀 Briefly Bot Server - Slack Event Listener
+2025-10-04 00:18:17,934 - __main__ - INFO - ============================================================
+2025-10-04 00:18:17,934 - __main__ - INFO - 📅 Started at: 2025-10-04 00:18:17
+2025-10-04 00:18:17,934 - __main__ - INFO - 🔧 Verbose logging: No
+2025-10-04 00:18:17,934 - __main__ - INFO - 🔧 Dry run: Yes
+2025-10-04 00:18:17,934 - __main__ - INFO - ============================================================
+2025-10-04 00:18:17,934 - __main__ - INFO - 🔧 Validating configuration...
+2025-10-04 00:18:17,934 - __main__ - INFO - ✅ Configuration validation passed
+2025-10-04 00:18:17,934 - __main__ - INFO - 🔍 DRY RUN: Configuration is valid, server would start successfully
+2025-10-04 00:28:02,320 - __main__ - INFO - Briefly Bot Server logging initialized
+2025-10-04 00:28:02,320 - __main__ - INFO - 🚀 Briefly Bot Server - Slack Event Listener
+2025-10-04 00:28:02,320 - __main__ - INFO - ============================================================
+2025-10-04 00:28:02,320 - __main__ - INFO - 📅 Started at: 2025-10-04 00:28:02
+2025-10-04 00:28:02,320 - __main__ - INFO - 🔧 Verbose logging: No
+2025-10-04 00:28:02,320 - __main__ - INFO - 🔧 Dry run: Yes
+2025-10-04 00:28:02,320 - __main__ - INFO - ============================================================
+2025-10-04 00:28:02,320 - __main__ - INFO - 🔧 Validating configuration...
+2025-10-04 00:28:02,320 - __main__ - INFO - ✅ Configuration validation passed
+2025-10-04 00:28:02,320 - __main__ - INFO - 🔍 DRY RUN: Configuration is valid, server would start successfully
