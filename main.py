@@ -21,30 +21,49 @@ from pathlib import Path
 from typing import List, Dict, Any, Optional
 
 # Add project root to path
-project_root = Path(__file__).parent
-sys.path.insert(0, str(project_root))
+# Handle both local and Lambda environments
+if os.getenv("AWS_LAMBDA_FUNCTION_NAME"):
+    # Lambda environment - slackbot is at /var/task
+    sys.path.insert(0, "/var/task")
+else:
+    # Local environment - use project root
+    project_root = Path(__file__).parent
+    sys.path.insert(0, str(project_root))
 
 # Import Briefly Bot services
 from slackbot.services import AggregationService, ContentProcessingService, PublisherService
 from slackbot.summarizer.models import SlackMessage
+from slackbot.utils.ai_content_filter import FilteringConfig
+from slackbot.utils.llm_content_filter import LLMFilteringConfig
 
 
 def setup_logging(verbose: bool = False) -> None:
     """Set up logging configuration."""
     log_level = logging.DEBUG if verbose else logging.INFO
 
-    # Create logs directory if it doesn't exist
-    logs_dir = Path("logs")
-    logs_dir.mkdir(exist_ok=True)
+    # Check if running in AWS Lambda
+    is_lambda = os.getenv("LAMBDA_ENV") is not None
 
-    logging.basicConfig(
-        level=log_level,
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-        handlers=[
-            logging.StreamHandler(sys.stdout),
-            logging.FileHandler(logs_dir / f'briefly_bot_{datetime.now().strftime("%Y%m%d")}.log'),
-        ],
-    )
+    if is_lambda:
+        # Lambda environment - only use console logging
+        logging.basicConfig(
+            level=log_level,
+            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+            handlers=[logging.StreamHandler(sys.stdout)],
+        )
+    else:
+        # Local environment - use both console and file logging
+        logs_dir = Path("logs")
+        logs_dir.mkdir(exist_ok=True)
+
+        logging.basicConfig(
+            level=log_level,
+            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+            handlers=[
+                logging.StreamHandler(sys.stdout),
+                logging.FileHandler(logs_dir / f'briefly_bot_{datetime.now().strftime("%Y%m%d")}.log'),
+            ],
+        )
 
     # Set specific logger levels
     logging.getLogger("arxiv").setLevel(logging.WARNING)
@@ -283,7 +302,12 @@ def publish_to_channels(
 
 
 def run_briefly_bot(
-    dry_run: bool = False, max_articles: int = 20, channel: Optional[str] = None, llm_provider: str = "openai"
+    dry_run: bool = False,
+    max_articles: int = 20,
+    channel: Optional[str] = None,
+    llm_provider: str = "openai",
+    strict_filtering: bool = False,
+    use_llm_filtering: bool = True,
 ) -> bool:
     """
     Run the complete Briefly Bot flow.
@@ -293,6 +317,8 @@ def run_briefly_bot(
         max_articles: Maximum number of articles to process
         channel: Target Slack channel (uses env var if not specified)
         llm_provider: LLM provider to use ("openai" or "gemini")
+        strict_filtering: If True, use strict AI/ML filtering
+        use_llm_filtering: If True, use LLM-based filtering (recommended)
 
     Returns:
         True if successful, False otherwise
@@ -306,7 +332,36 @@ def run_briefly_bot(
         # Step 1: Initialize services
         logger.info("🔧 Initializing services...")
 
-        aggregation_service = AggregationService()
+        # Configure AI content filtering (fallback)
+        filtering_config = FilteringConfig(
+            min_relevance_score=0.4 if strict_filtering else 0.3,
+            min_quality_score=0.3 if strict_filtering else 0.2,
+            max_age_hours=48 if strict_filtering else 72,
+            strict_mode=strict_filtering,
+            recency_boost_enabled=True,
+            source_quality_boost=True,
+        )
+
+        # Configure LLM filtering (primary)
+        llm_filtering_config = LLMFilteringConfig(
+            llm_provider=llm_provider,
+            confidence_threshold=0.8 if strict_filtering else 0.75,  # Higher thresholds
+            fallback_to_keywords=True,
+            enable_batch_processing=True,
+            batch_size=5,
+        )
+
+        logger.info("🔍 Filtering Configuration:")
+        logger.info("   Use LLM Filtering: %s", use_llm_filtering)
+        logger.info("   LLM Provider: %s", llm_provider)
+        logger.info("   Confidence Threshold: %.1f", llm_filtering_config.confidence_threshold)
+        logger.info("   Fallback to Keywords: %s", llm_filtering_config.fallback_to_keywords)
+        logger.info("   Strict Mode: %s", strict_filtering)
+
+        aggregation_service = AggregationService(
+            filtering_config=filtering_config if not use_llm_filtering else None,
+            llm_filtering_config=llm_filtering_config if use_llm_filtering else None,
+        )
         if not aggregation_service.is_healthy():
             logger.error("❌ Failed to initialize AggregationService")
             return False
@@ -391,12 +446,14 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  python main.py                    # Run with default settings (OpenAI)
+  python main.py                    # Run with LLM filtering (recommended)
   python main.py --dry-run         # Test without publishing to Slack
   python main.py --verbose         # Enable verbose logging
   python main.py --max-articles 10 # Limit to 10 articles
   python main.py --channel C123456 # Specify Slack channel
   python main.py --llm-provider gemini # Use Gemini instead of OpenAI
+  python main.py --strict-filtering # Use strict AI/ML filtering
+  python main.py --no-llm-filtering # Use keyword filtering only
         """,
     )
 
@@ -418,6 +475,18 @@ Examples:
         help="LLM provider to use for TLDR summarization (default: openai)",
     )
 
+    parser.add_argument(
+        "--strict-filtering",
+        action="store_true",
+        help="Use strict AI/ML filtering (higher relevance thresholds)",
+    )
+
+    parser.add_argument(
+        "--no-llm-filtering",
+        action="store_true",
+        help="Disable LLM-based filtering and use keyword filtering only",
+    )
+
     args = parser.parse_args()
 
     # Setup logging
@@ -431,6 +500,8 @@ Examples:
     logger.info("🔧 Dry run: %s", "Yes" if args.dry_run else "No")
     logger.info("📊 Max articles: %s", args.max_articles)
     logger.info("🧠 LLM Provider: %s", args.llm_provider)
+    logger.info("🔍 Strict filtering: %s", "Yes" if args.strict_filtering else "No")
+    logger.info("🤖 LLM filtering: %s", "No" if args.no_llm_filtering else "Yes")
     logger.info("📺 Target channel: %s", args.channel or os.getenv("SLACK_CHANNEL_ID", "Not specified"))
     logger.info("=" * 50)
 
@@ -457,7 +528,12 @@ Examples:
 
     # Run the bot
     success = run_briefly_bot(
-        dry_run=args.dry_run, max_articles=args.max_articles, channel=args.channel, llm_provider=args.llm_provider
+        dry_run=args.dry_run,
+        max_articles=args.max_articles,
+        channel=args.channel,
+        llm_provider=args.llm_provider,
+        strict_filtering=args.strict_filtering,
+        use_llm_filtering=not args.no_llm_filtering,
     )
 
     if success:

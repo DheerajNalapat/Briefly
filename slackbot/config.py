@@ -4,7 +4,6 @@ Configuration for the News Finder Slack Bot.
 
 import os
 from pathlib import Path
-from typing import Optional
 
 # Load environment variables from .env file
 try:
@@ -37,7 +36,7 @@ SLACK_CONFIG = {
     "bot_token": os.getenv("SLACK_BOT_TOKEN"),
     "app_token": os.getenv("SLACK_APP_TOKEN"),
     "signing_secret": os.getenv("SLACK_SIGNING_SECRET"),
-    "default_channel": os.getenv("SLACK_DEFAULT_CHANNEL", "#ai-updates"),
+    "default_channel": os.getenv("SLACK_CHANNEL_ID", "#ai-updates"),
 }
 
 # OpenAI configuration

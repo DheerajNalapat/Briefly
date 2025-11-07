@@ -14,16 +14,16 @@ sources:
     country: "us"
     last_fetch: null
 
-  - name: "Business AI News"
-    source_type: "newsapi"
-    enabled: true
-    max_items: 10
-    update_interval: 3600
-    query: "AI"
-    category: "business"
-    language: "en"
-    country: "us"
-    last_fetch: null
+  # - name: "Business AI News"
+  #   source_type: "newsapi"
+  #   enabled: true
+  #   max_items: 10
+  #   update_interval: 3600
+  #   query: "AI"
+  #   category: "business"
+  #   language: "en"
+  #   country: "us"
+  #   last_fetch: null
 
   - name: "Science AI News"
     source_type: "newsapi"
@@ -36,16 +36,16 @@ sources:
     country: "us"
     last_fetch: null
 
-  - name: "Health AI News"
-    source_type: "newsapi"
-    enabled: true
-    max_items: 10
-    update_interval: 3600
-    query: "AI"
-    category: "health"
-    language: "en"
-    country: "us"
-    last_fetch: null
+  # - name: "Health AI News"
+  #   source_type: "newsapi"
+  #   enabled: true
+  #   max_items: 10
+  #   update_interval: 3600
+  #   query: "AI"
+  #   category: "health"
+  #   language: "en"
+  #   country: "us"
+  #   last_fetch: null
 
   # ArXiv sources for research papers
   - name: "ArXiv AI Papers"

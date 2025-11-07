@@ -304,7 +304,51 @@ poetry run python scripts/test_summarizer.py
 
 ## 🚀 Production Deployment
 
-### Automated Execution
+### AWS Lambda Deployment (Recommended)
+
+The bot is optimized for AWS Lambda deployment with automatic scaling and serverless execution.
+
+#### Quick Lambda Setup
+
+1. **Create deployment package**:
+
+   ```bash
+   ./deploy-lambda.sh
+   ```
+
+2. **Upload to AWS Lambda**:
+
+   - Create new Lambda function
+   - Upload `Brieflybot-lambda.zip`
+   - Set handler to `lambda_function.lambda_handler`
+   - Configure memory (512 MB) and timeout (5 minutes)
+
+3. **Set environment variables**:
+
+   ```bash
+   NEWSAPI_KEY=your_key
+   OPENAI_API_KEY=your_key
+   SLACK_BOT_TOKEN=your_token
+   SLACK_APP_TOKEN=your_token
+   SLACK_CHANNEL_ID=your_channel
+   ```
+
+4. **Schedule with EventBridge**:
+   ```bash
+   # Daily at 9 AM UTC
+   cron(0 9 * * ? *)
+   ```
+
+#### Lambda Configuration
+
+- **Runtime**: Python 3.11
+- **Memory**: 512 MB (minimum)
+- **Timeout**: 5 minutes (300 seconds)
+- **Handler**: `lambda_function.lambda_handler`
+
+For detailed Lambda configuration, see [lambda-config.md](lambda-config.md).
+
+### Traditional Server Deployment
 
 Set up a cron job or scheduler to run the bot daily:
 
@@ -315,16 +359,23 @@ Set up a cron job or scheduler to run the bot daily:
 
 ### Monitoring
 
-The bot creates log files with timestamps:
+#### AWS Lambda
 
-- `logs/briefly_bot_YYYYMMDD.log` - Daily log files
-- Console output for real-time monitoring
+- **CloudWatch Logs**: Automatic logging to `/aws/lambda/newsfinderbot`
+- **CloudWatch Metrics**: Monitor invocations, duration, errors
+- **CloudWatch Alarms**: Set up alerts for failures
+
+#### Traditional Server
+
+- **Log Files**: `logs/briefly_bot_YYYYMMDD.log` - Daily log files
+- **Console Output**: Real-time monitoring
 
 ### Performance
 
 - **Collection**: ~30-60 seconds for 20 articles
 - **Summarization**: ~2-5 seconds per article (AI) or ~0.1 seconds (fallback)
 - **Total Runtime**: ~2-5 minutes for 20 articles
+- **Lambda Cold Start**: ~2-3 seconds additional
 
 ## 🔍 Troubleshooting
 

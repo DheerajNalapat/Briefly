@@ -14,6 +14,8 @@ from slackbot.collectors.base_collector import BaseCollector, CollectorManager
 from slackbot.collectors.arxiv_collector import create_arxiv_collector
 from slackbot.collectors.newsapi_org_collector import create_newsapi_collector
 from slackbot.collectors.rss_collector import create_rss_collector
+from slackbot.utils.ai_content_filter import FilteringConfig, create_ai_content_filter
+from slackbot.utils.llm_content_filter import LLMFilteringConfig, create_llm_content_filter
 
 
 logger = logging.getLogger(__name__)
@@ -27,16 +29,31 @@ class AggregationService:
     collectors and normalizing the data into a common format.
     """
 
-    def __init__(self, config_path: Optional[str] = None):
+    def __init__(
+        self,
+        config_path: Optional[str] = None,
+        filtering_config: Optional[FilteringConfig] = None,
+        llm_filtering_config: Optional[LLMFilteringConfig] = None,
+    ):
         """
         Initialize the aggregation service.
 
         Args:
             config_path: Path to the collector configuration file
+            filtering_config: Configuration for AI content filtering
+            llm_filtering_config: Configuration for LLM-based filtering
         """
         self.config_path = config_path or "slackbot/collectors/sources/api_sources_config.yaml"
         self.collectors: Dict[str, BaseCollector] = {}
         self.collector_manager: Optional[CollectorManager] = None
+
+        # Initialize AI content filter (fallback)
+        self.ai_filter = create_ai_content_filter(filtering_config)
+        logger.info("AI Content Filter initialized with config: %s", filtering_config)
+
+        # Initialize LLM content filter (primary)
+        self.llm_filter = create_llm_content_filter(llm_filtering_config)
+        logger.info("LLM Content Filter initialized with config: %s", llm_filtering_config)
 
         logger.info("Initializing AggregationService")
         self._initialize_collectors()
@@ -236,10 +253,33 @@ class AggregationService:
         else:
             final_articles = balanced_articles
 
+        # Apply intelligent content filtering to all collected articles
+        logger.info("🤖 Applying intelligent content filtering to %s articles...", len(final_articles))
+
+        # Try LLM filtering first, fall back to keyword filtering if not available
+        if self.llm_filter.is_available():
+            logger.info("🧠 Using LLM-based filtering (primary method)")
+            filtered_articles = self.llm_filter.filter_content_batch(final_articles)
+        else:
+            logger.info("🔍 Using keyword-based filtering (LLM not available)")
+            filtered_articles = self.ai_filter.filter_and_score_content(final_articles)
+
+        # Log filtering results
+        if final_articles:
+            filtering_summary = self._get_filtering_summary(len(final_articles), len(filtered_articles))
+            logger.info("📊 Filtering Results:")
+            logger.info("   Original: %s articles", filtering_summary["original_count"])
+            logger.info("   Filtered: %s articles", filtering_summary["filtered_count"])
+            logger.info("   Retention: %.1f%%", filtering_summary["retention_rate"] * 100)
+            logger.info("   Filtered Out: %s articles", filtering_summary["filtered_out"])
+            logger.info("   Method: %s", filtering_summary["method"])
+
         logger.info(
-            "✅ Balanced collection complete: %s articles from %s sources", len(final_articles), len(available_sources)
+            "✅ Balanced collection complete: %s articles from %s sources",
+            len(filtered_articles),
+            len(available_sources),
         )
-        return final_articles
+        return filtered_articles
 
     def collect_prioritized(self, max_articles: int = 20, **kwargs) -> List[Dict[str, Any]]:
         """
@@ -324,8 +364,42 @@ class AggregationService:
         # Ensure we don't exceed max_articles
         final_articles = prioritized_articles[:max_articles]
 
-        logger.info("✅ Prioritized collection complete: %s articles (NewsAPI → RSS → ArXiv)", len(final_articles))
-        return final_articles
+        # Apply intelligent content filtering to all collected articles
+        logger.info("🤖 Applying intelligent content filtering to %s articles...", len(final_articles))
+
+        # Try LLM filtering first, fall back to keyword filtering if not available
+        if self.llm_filter.is_available():
+            logger.info("🧠 Using LLM-based filtering (primary method)")
+            filtered_articles = self.llm_filter.filter_content_batch(final_articles)
+        else:
+            logger.info("🔍 Using keyword-based filtering (LLM not available)")
+            filtered_articles = self.ai_filter.filter_and_score_content(final_articles)
+
+        # Log filtering results
+        if final_articles:
+            filtering_summary = self._get_filtering_summary(len(final_articles), len(filtered_articles))
+            logger.info("📊 Filtering Results:")
+            logger.info("   Original: %s articles", filtering_summary["original_count"])
+            logger.info("   Filtered: %s articles", filtering_summary["filtered_count"])
+            logger.info("   Retention: %.1f%%", filtering_summary["retention_rate"] * 100)
+            logger.info("   Filtered Out: %s articles", filtering_summary["filtered_out"])
+            logger.info("   Method: %s", filtering_summary["method"])
+
+        logger.info("✅ Prioritized collection complete: %s articles (NewsAPI → RSS → ArXiv)", len(filtered_articles))
+        return filtered_articles
+
+    def _get_filtering_summary(self, original_count: int, filtered_count: int) -> Dict[str, Any]:
+        """Get filtering summary with method information."""
+        method = "llm" if self.llm_filter.is_available() else "keyword"
+
+        return {
+            "original_count": original_count,
+            "filtered_count": filtered_count,
+            "retention_rate": filtered_count / original_count if original_count > 0 else 0,
+            "filtered_out": original_count - filtered_count,
+            "method": method,
+            "timestamp": datetime.now().isoformat(),
+        }
 
     def get_collection_service_summary(self) -> Dict[str, Any]:
         """
@@ -340,6 +414,43 @@ class AggregationService:
             "available_collectors": self.get_available_collectors(),
             "collector_status": self.get_collector_status(),
             "config_path": self.config_path,
+            "ai_filter_config": {
+                "min_relevance_score": self.ai_filter.config.min_relevance_score,
+                "min_quality_score": self.ai_filter.config.min_quality_score,
+                "max_age_hours": self.ai_filter.config.max_age_hours,
+                "strict_mode": self.ai_filter.config.strict_mode,
+            },
+            "llm_filter_config": {
+                "available": self.llm_filter.is_available(),
+                "provider": self.llm_filter.config.llm_provider,
+                "confidence_threshold": self.llm_filter.config.confidence_threshold,
+                "fallback_available": self.llm_filter.fallback_filter is not None,
+            },
+        }
+
+    def get_filtering_stats(self) -> Dict[str, Any]:
+        """
+        Get AI filtering statistics and configuration.
+
+        Returns:
+            Dictionary with filtering statistics
+        """
+        return {
+            "ai_filter_available": True,
+            "filtering_config": {
+                "min_relevance_score": self.ai_filter.config.min_relevance_score,
+                "min_quality_score": self.ai_filter.config.min_quality_score,
+                "max_age_hours": self.ai_filter.config.max_age_hours,
+                "strict_mode": self.ai_filter.config.strict_mode,
+                "recency_boost_enabled": self.ai_filter.config.recency_boost_enabled,
+                "source_quality_boost": self.ai_filter.config.source_quality_boost,
+            },
+            "keyword_counts": {
+                "core_ai_keywords": len(self.ai_filter.core_ai_keywords),
+                "negative_keywords": len(self.ai_filter.negative_keywords),
+                "source_weights": len(self.ai_filter.source_weights),
+            },
+            "timestamp": datetime.now().isoformat(),
         }
 
     def is_healthy(self) -> bool:

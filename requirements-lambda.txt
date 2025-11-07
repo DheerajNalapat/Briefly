@@ -1,0 +1,27 @@
+# AWS Lambda Requirements for NewsFinderBot
+# Core dependencies only - exclude dev dependencies
+
+# Core utilities
+requests>=2.31.0
+PyYAML>=6.0.0
+python-dotenv>=1.0.0
+
+# News collection APIs
+feedparser>=6.0.0
+arxiv>=2.2.0
+newsapi-python>=0.2.6
+
+# Slack bot dependencies
+slack-bolt>=1.18.0
+slack-sdk>=3.26.0
+
+# LLM dependencies (for summarization)
+openai>=1.104.2,<2.0.0
+google-generativeai>=0.3.0
+langchain>=0.1.0
+langchain-google-genai>=0.1.0
+langchain-openai>=0.3.30,<0.4.0
+
+# Data models and validation
+pydantic>=2.0.0,<3.0.0
+pydantic-core>=2.0.0,<3.0.0

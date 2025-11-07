@@ -181,7 +181,7 @@ class PublisherService:
                 }
 
             # Publish the message
-            result = publisher.publish_tldr_message(slack_message)
+            result = publisher.publish_tldr_message(slack_message, channel=channel)
 
             return {
                 "success": True,
